@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Design Gear — Gears</title>
+  <meta name="description" content="How product scope and research evidence become buildable specifications.">
+  <style>
+    :root {
+      --fg: #111;
+      --muted: #666;
+      --accent: #0a3;
+      --bg: #fafafa;
+      --rule: #e5e5e5;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      margin: 0;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .wrap { max-width: 42rem; margin: 0 auto; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+    }
+    h1 { font-size: 2.25rem; line-height: 1.1; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
+    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2.5rem; }
+    h2 { font-size: 1.125rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
+    p, ul { margin: 0 0 1rem; }
+    ul { padding-left: 1.25rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+    footer .gears-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .stub { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="eyebrow">Gear 4 of 5</p>
+      <h1>The Design Gear</h1>
+      <p class="lead">How product scope and research evidence become buildable specifications.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Purpose</h2>
+        <p>Design takes scoped product work and research findings and produces specs concrete enough to build against — interaction, visual, system, and any other discipline the work requires.</p>
+      </section>
+
+      <section>
+        <h2>Input</h2>
+        <p>Product specs from the Product gear, evidence from the Research gear.</p>
+      </section>
+
+      <section>
+        <h2>Output</h2>
+        <p>Buildable design specifications: flows, components, system rules, acceptance criteria.</p>
+      </section>
+
+      <section>
+        <h2>Instructions</h2>
+        <p class="stub">Coming soon.</p>
+      </section>
+    </main>
+
+    <footer>
+      <a href="https://gears.run">← gears.run</a>
+      <nav class="gears-nav">
+        <a href="https://research.gears.run">← Research</a>
+        <a href="https://development.gears.run">Development →</a>
+      </nav>
+    </footer>
+  </div>
+</body>
+</html>
