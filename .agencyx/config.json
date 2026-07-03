@@ -1,0 +1,24 @@
+{
+  "engagement" : {
+    "displayName" : "gears-guides",
+    "id" : "gears-playground/gears-guides",
+    "localPath" : ""
+  },
+  "indexIgnore" : [
+
+  ],
+  "modelOverrides" : {
+
+  },
+  "schemaVersion" : "agencyx.config.v1",
+  "verification" : {
+    "runCommand" : "npx serve guides/intake",
+    "testCommand" : "echo \"No tests\"",
+    "timeoutMs" : 300000
+  },
+  "vision" : {
+    "briefPaths" : [
+
+    ]
+  }
+}
