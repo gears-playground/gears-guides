@@ -10,6 +10,10 @@
   "modelOverrides" : {
 
   },
+  "provider" : {
+    "kind" : "ollama-cloud",
+    "model" : "nemotron-3-ultra"
+  },
   "schemaVersion" : "agencyx.config.v1",
   "verification" : {
     "runCommand" : "npx serve guides/intake",
@@ -18,7 +22,7 @@
   },
   "vision" : {
     "briefPaths" : [
-
+      "docs/VISION.md"
     ]
   }
 }
