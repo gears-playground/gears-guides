@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Intake Gear — Gears</title>
-  <meta name="description" content="How requests, feedback, and ideas enter the Gears system.">
+  <title>Intake — The Product Gear — Gears</title>
+  <meta name="description" content="How requests, feedback, and ideas enter the Product gear.">
   <style>
     :root {
       --fg: #111;
@@ -30,6 +30,7 @@
       color: var(--muted);
       margin: 0 0 0.5rem;
     }
+    .eyebrow a { color: inherit; }
     h1 { font-size: 2.25rem; line-height: 1.1; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
     .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2.5rem; }
     h2 { font-size: 1.125rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
@@ -37,6 +38,12 @@
     ul { padding-left: 1.25rem; }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    .note {
+      border-left: 2px solid var(--rule);
+      padding-left: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
     footer {
       margin-top: 4rem;
       padding-top: 1.5rem;
@@ -54,15 +61,19 @@
 <body>
   <div class="wrap">
     <header>
-      <p class="eyebrow">Gear 1 of 5</p>
-      <h1>The Intake Gear</h1>
-      <p class="lead">How requests, feedback, and ideas enter the Gears system.</p>
+      <p class="eyebrow"><a href="https://product.gears.run">The Product Gear</a></p>
+      <h1>Intake</h1>
+      <p class="lead">How requests, feedback, and ideas enter the Product gear.</p>
     </header>
 
     <main>
       <section>
+        <p class="note">Intake isn't a gear — it's a process that happens inside every gear. This page documents Product's intake: the front door through which raw signal becomes candidate product work.</p>
+      </section>
+
+      <section>
         <h2>Purpose</h2>
-        <p>Intake is the front door. It captures every signal — feature requests, bug reports, partner asks, internal observations — in one canonical place, with enough structure that downstream gears can act on it.</p>
+        <p>Intake is Product's front door. It captures every signal — feature requests, bug reports, partner asks, internal observations — in one canonical place, with enough structure that Product can scope and prioritize it.</p>
       </section>
 
       <section>
@@ -72,7 +83,7 @@
 
       <section>
         <h2>Output</h2>
-        <p>A normalized intake item, routed to the right downstream gear.</p>
+        <p>A normalized intake item, ready for Product to scope and prioritize.</p>
       </section>
 
       <section>
@@ -84,7 +95,7 @@
     <footer>
       <a href="https://gears.run">← gears.run</a>
       <nav class="gears-nav">
-        <a href="https://product.gears.run">Product →</a>
+        <a href="https://product.gears.run">The Product Gear</a>
       </nav>
     </footer>
   </div>

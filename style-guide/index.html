@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gears Design System — Bauhaus Edition</title>
+  <meta name="description" content="The Gears visual language: Bauhaus primitives, four gear signatures, and nine colour ramps. Dark by default.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..700&family=Inter:wght@400;500;600;700&family=Monoton&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       RAW TOKENS — the reservoir, straight from colors.json.
+       Nine ramps + the four gear signatures. Theme-independent.
+       ============================================================ */
+    :root {
+      --red-100:#FFE1E5; --red-200:#FFA8B2; --red-300:#FF808E; --red-400:#FD495E; --red-500:#F1273F; --red-600:#C81429; --red-700:#8C1725; --red-800:#59171F; --red-900:#2A0E11;
+      --orange-100:#FFECE1; --orange-200:#FFCAA8; --orange-300:#FFB080; --orange-400:#FD8E49; --orange-500:#FD6F17; --orange-600:#C85A14; --orange-700:#8C4417; --orange-800:#593017; --orange-900:#2A190E;
+      --yellow-100:#FFFBE1; --yellow-200:#FFF5A8; --yellow-300:#FFF080; --yellow-400:#FDE849; --yellow-500:#F1DA27; --yellow-600:#C8B314; --yellow-700:#8C7F17; --yellow-800:#595117; --yellow-900:#2A270E;
+      --lime-100:#E5FFEF; --lime-200:#BDFFD6; --lime-300:#8FFFBA; --lime-400:#60F097; --lime-500:#27F174; --lime-600:#14C859; --lime-700:#178C44; --lime-800:#175930; --lime-900:#0E2A19;
+      --mint-100:#E5FFFC; --mint-200:#BDFFF7; --mint-300:#8FFFF2; --mint-400:#60F0DF; --mint-500:#27F1D9; --mint-600:#14C8B3; --mint-700:#178C7F; --mint-800:#175951; --mint-900:#0E2A19;
+      --blue-100:#E5F4FF; --blue-200:#BDE2FF; --blue-300:#8FCEFF; --blue-400:#60B2F0; --blue-500:#279AF1; --blue-600:#147AC8; --blue-700:#17598C; --blue-800:#173C59; --blue-900:#0E1E2A;
+      --indigo-100:#E1E3FF; --indigo-200:#A8AEFF; --indigo-300:#8088FF; --indigo-400:#4955FD; --indigo-500:#2735F1; --indigo-600:#1420C8; --indigo-700:#171F8C; --indigo-800:#171B59; --indigo-900:#0E102A;
+      --purple-100:#EEE1FF; --purple-200:#CEA8FF; --purple-300:#B780FF; --purple-400:#9749FD; --purple-500:#7F27F1; --purple-600:#6214C8; --purple-700:#4A178C; --purple-800:#341759; --purple-900:#1A0E2A;
+      --gray-100:#FFFFFF; --gray-200:#E3E3E3; --gray-300:#C6C6C6; --gray-400:#A9A9A9; --gray-500:#8D8D8D; --gray-600:#707070; --gray-700:#545454; --gray-800:#383838; --gray-900:#1C1C1C;
+
+      --product:var(--orange-500);
+      --research:var(--red-500);
+      --design:var(--purple-500);
+      --dev:var(--indigo-500);
+
+      /* Type roles */
+      --display:"Host Grotesk", system-ui, sans-serif;   /* headlines */
+      --body:"Inter", system-ui, sans-serif;             /* prose + labels */
+      --brand:"Monoton", var(--display);                 /* the one neon moment */
+      --mono:ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace; /* hex + tokens */
+
+      /* Structure */
+      --rule:3px;
+      --edge:2px solid var(--line);
+      --edge-fat:var(--rule) solid var(--line);
+      --gutter:clamp(1.25rem, 4vw, 3rem);
+      --maxw:76rem;
+    }
+
+    /* ============================================================
+       SEMANTIC THEME — DARK is primary (default).
+       ============================================================ */
+    :root {
+      --surface:#161519;         /* page */
+      --surface-2:#201E26;       /* raised cards, bar */
+      --text:#F2ECDE;            /* warm cream ink */
+      --text-dim:#9B98A6;        /* muted */
+      --line:#F2ECDE;            /* rules + borders (light on dark) */
+      --hole:var(--surface);     /* cog centre punch */
+      --focus:#FDE849;           /* yellow-400 */
+      --blend:screen;            /* overlaps lighten on dark */
+      --grid-line:rgba(242,236,222,.05);
+      --neon:0 0 34px rgba(253,111,23,.38);
+    }
+    /* Light theme — only when the system asks for it */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --surface:#F1EBDD;
+        --surface-2:#FFFFFF;
+        --text:#1C1C1C;
+        --text-dim:#545454;
+        --line:#1C1C1C;
+        --hole:var(--surface);
+        --focus:#2735F1;
+        --blend:multiply;        /* overlaps darken on paper */
+        --grid-line:rgba(28,28,28,.06);
+        --neon:none;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    body {
+      margin: 0;
+      background-color: var(--surface);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 3rem 3rem;
+      background-position: -1px -1px;
+    }
+
+    .skip { position: absolute; left: -999px; top: 0; background: var(--text); color: var(--surface); padding: .6rem 1rem; font-family: var(--mono); z-index: 50; }
+    .skip:focus { left: .5rem; top: .5rem; }
+
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+    .shell { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+    .tag { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .16em; margin: 0; color: var(--text-dim); }
+
+    /* ================= TOP BAR ================= */
+    .bar { position: sticky; top: 0; z-index: 40; background: var(--surface-2); border-bottom: var(--edge-fat); }
+    .bar .shell { display: flex; align-items: center; gap: 1.25rem; min-height: 3.4rem; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: .7rem; font-family: var(--mono); font-weight: 700; letter-spacing: .04em; text-decoration: none; color: var(--text); font-size: .95rem; }
+    .brand .cog { width: 26px; height: 26px; }
+    .bar nav { margin-left: auto; display: flex; gap: 1.1rem; flex-wrap: wrap; }
+    .bar nav a { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .1em; text-decoration: none; color: var(--text-dim); padding: .2rem 0; border-bottom: 2px solid transparent; }
+    .bar nav a:hover, .bar nav a:focus-visible { color: var(--text); border-bottom-color: var(--orange-500); }
+
+    /* ================= HERO ================= */
+    .hero { border-bottom: var(--edge-fat); overflow: clip; }
+    .hero .shell { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(1.5rem, 4vw, 3.5rem); padding-top: clamp(2.5rem, 6vw, 5rem); padding-bottom: clamp(2.5rem, 6vw, 5rem); align-items: center; }
+    .hero-copy .tag { margin-bottom: 1.5rem; }
+    .neon {
+      font-family: var(--brand);
+      font-size: clamp(3.6rem, 12vw, 8.5rem);
+      line-height: .9; color: var(--orange-500);
+      margin: 0 0 1.25rem; letter-spacing: .01em;
+      text-shadow: var(--neon);
+    }
+    .hero h1 { font-family: var(--display); font-weight: 800; font-size: clamp(1.4rem, 3.2vw, 2.1rem); line-height: 1.02; letter-spacing: -.01em; text-transform: uppercase; margin: 0 0 1.25rem; overflow-wrap: break-word; }
+    .hero h1 em { font-style: normal; color: var(--orange-500); }
+    .hero .lead { font-size: clamp(1.02rem, 1.6vw, 1.2rem); max-width: 36ch; color: var(--text-dim); margin: 0 0 2rem; }
+    .hero-gears { display: flex; gap: 1.25rem 1.75rem; flex-wrap: wrap; border-top: var(--edge); padding-top: 1.2rem; }
+    .hero-gears .hg { display: flex; align-items: center; gap: .55rem; font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+    .hero-gears .hg .cog { width: 22px; height: 22px; flex: none; }
+    .hero-gears .hg span { color: var(--text-dim); }
+
+    .composition { position: relative; aspect-ratio: 3 / 4; border: var(--edge-fat); background: var(--surface-2); overflow: hidden; }
+    .composition svg { display: block; width: 100%; height: 100%; }
+    .anim { transform-origin: center; }
+    @media (prefers-reduced-motion: no-preference) {
+      .anim { opacity: 0; animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+      .a1 { animation-delay: .05s; } .a2 { animation-delay: .18s; } .a3 { animation-delay: .31s; } .a4 { animation-delay: .44s; } .a5 { animation-delay: .57s; }
+      @keyframes rise { from { opacity: 0; transform: translateY(22px) scale(.94); } to { opacity: 1; transform: none; } }
+    }
+
+    /* ================= SECTION SCAFFOLD ================= */
+    section { border-bottom: var(--edge-fat); padding: clamp(3rem, 6vw, 5rem) 0; }
+    .sec-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .sec-num { font-family: var(--mono); font-weight: 700; font-size: .8rem; letter-spacing: .1em; }
+    .sec-head h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.7rem, 4vw, 2.9rem); line-height: 1; letter-spacing: -.01em; margin: 0; }
+    .sec-head p { margin: 0; color: var(--text-dim); max-width: 40ch; margin-left: auto; }
+
+    /* ---- principles ---- */
+    .principles { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0; border: var(--edge); }
+    .principles > div { padding: 1.75rem; border-right: var(--edge); }
+    .principles > div:last-child { border-right: 0; }
+    .principles .shape { height: 68px; margin-bottom: 1.25rem; }
+    .principles h3 { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 1.15rem; margin: 0 0 .5rem; }
+    .principles p { margin: 0; font-size: .95rem; color: var(--text-dim); }
+
+    /* ---- colour ---- */
+    .gear-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1rem; margin-bottom: 3rem; }
+    .gear-swatch { border: var(--edge-fat); }
+    .gear-swatch .chip { aspect-ratio: 5 / 3; display: flex; align-items: flex-end; padding: .7rem; }
+    .gear-swatch .chip .cog { width: 30px; height: 30px; }
+    .gear-swatch .meta { border-top: var(--edge-fat); padding: .6rem .7rem; background: var(--surface-2); }
+    .gear-swatch .meta b { font-family: var(--display); font-weight: 700; text-transform: uppercase; display: block; }
+    .gear-swatch .meta code { font-family: var(--mono); font-size: .74rem; color: var(--text-dim); }
+
+    .ramp-legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .75rem; }
+    .ramps { display: grid; gap: 4px; }
+    .ramp { display: grid; grid-template-columns: 4.5rem repeat(9, minmax(0,1fr)); gap: 4px; align-items: stretch; }
+    .ramp .name { font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; align-self: center; }
+    .swatch { border: 0; cursor: pointer; aspect-ratio: 1 / 1; min-height: 44px; display: flex; align-items: flex-end; padding: 5px; font-family: var(--mono); font-size: .58rem; line-height: 1; transition: transform .12s ease; position: relative; }
+    .swatch:hover { transform: scale(1.06); z-index: 2; outline: 2px solid var(--line); }
+    .swatch .h { opacity: 0; transition: opacity .12s ease; }
+    .swatch:hover .h, .swatch:focus-visible .h { opacity: 1; }
+    .swatch.copied::after { content: "COPIED"; position: absolute; inset: 0; display: grid; place-items: center; background: var(--text); color: var(--surface); font-size: .6rem; letter-spacing: .1em; }
+    .neutral-note { margin-top: 2rem; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
+    .neutral-note .card { border: var(--edge); padding: 1.1rem 1.25rem; display: flex; gap: 1rem; align-items: center; }
+    .neutral-note .dot { width: 46px; height: 46px; border: 2px solid var(--line); flex: none; }
+    .neutral-note b { font-family: var(--display); font-weight: 700; text-transform: uppercase; }
+    .neutral-note code { font-family: var(--mono); font-size: .8rem; color: var(--text-dim); }
+    .neutral-note p { margin: .2rem 0 0; font-size: .85rem; color: var(--text-dim); }
+
+    /* ---- typography ---- */
+    .type-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0; border: var(--edge); margin-bottom: 2.5rem; }
+    .type-grid > div { padding: 1.5rem; border-right: var(--edge); }
+    .type-grid > div:last-child { border-right: 0; }
+    .type-grid .role { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-dim); }
+    .type-grid .spec { font-size: clamp(2.5rem, 5vw, 3.4rem); line-height: 1; margin: .75rem 0; }
+    .s-brand { font-family: var(--brand); color: var(--orange-500); font-size: clamp(2rem,4vw,2.6rem); }
+    .s-display { font-family: var(--display); font-weight: 800; text-transform: uppercase; }
+    .s-body { font-family: var(--body); font-weight: 600; }
+    .s-mono { font-family: var(--mono); font-weight: 700; }
+    .type-grid .desc { font-size: .88rem; color: var(--text-dim); margin: 0; }
+    .type-grid .desc code { font-family: var(--mono); font-size: .82em; }
+    .scale { border: var(--edge); }
+    .scale div { display: flex; align-items: baseline; gap: 1.5rem; padding: .85rem 1.5rem; border-bottom: var(--edge); }
+    .scale div:last-child { border-bottom: 0; }
+    .scale .lbl { font-family: var(--mono); font-size: .7rem; color: var(--text-dim); flex: none; width: 6rem; letter-spacing: .04em; }
+    .scale .sample { font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: 1; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ---- shape language ---- */
+    .primitives { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+    .primitive { border: var(--edge); aspect-ratio: 1; display: grid; place-items: center; position: relative; background: var(--surface-2); }
+    .primitive svg { width: 60%; height: 60%; }
+    .primitive span { position: absolute; bottom: .5rem; left: .5rem; font-family: var(--mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; }
+    .banner { border: var(--edge-fat); background: var(--indigo-500); color: #F2ECDE; padding: clamp(1.5rem,4vw,2.5rem); position: relative; overflow: hidden; }
+    .banner .msg { position: relative; z-index: 2; max-width: 28ch; }
+    .banner h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.4rem,3vw,2.2rem); line-height: .98; margin: 0 0 .6rem; }
+    .banner p { margin: 0; color: var(--indigo-100); }
+    .banner .deco { position: absolute; inset: 0; z-index: 1; }
+
+    /* ---- components ---- */
+    .components { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.5rem; }
+    .demo { border: var(--edge); }
+    .demo-head { border-bottom: var(--edge); padding: .6rem 1rem; font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); display: flex; justify-content: space-between; }
+    .demo-body { padding: 1.5rem; display: flex; flex-wrap: wrap; gap: .9rem; align-items: center; }
+
+    .btn { font-family: var(--mono); font-weight: 700; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; border: 2px solid var(--line); background: var(--text); color: var(--surface); padding: .7rem 1.2rem; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 4px 4px 0 0 var(--line); transition: transform .1s ease, box-shadow .1s ease; }
+    .btn:hover, .btn:focus-visible { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 0 var(--line); }
+    .btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 0 var(--line); }
+    .btn.ghost { background: transparent; color: var(--text); }
+    .btn.accent { background: var(--orange-500); border-color: var(--line); color: #1C1C1C; box-shadow: 4px 4px 0 0 var(--line); }
+    .btn.accent:hover, .btn.accent:focus-visible { box-shadow: 6px 6px 0 0 var(--line); }
+
+    .badge { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--mono); font-weight: 700; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--line); padding: .35rem .7rem; }
+    .badge .cog { width: 15px; height: 15px; }
+
+    .idcard { border: var(--edge-fat); background: var(--surface-2); }
+    .idcard .top { padding: 1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: var(--edge-fat); }
+    .idcard .top .cog { width: 34px; height: 34px; }
+    .idcard .top .n { font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; color: #1C1C1C; }
+    .idcard .body { padding: 1rem; }
+    .idcard h4 { font-family: var(--display); font-weight: 800; text-transform: uppercase; margin: 0 0 .3rem; }
+    .idcard p { margin: 0; font-size: .85rem; color: var(--text-dim); }
+
+    .callout { border: 2px solid var(--line); border-left: var(--rule) solid var(--yellow-500); padding: 1rem 1.25rem; background: var(--surface-2); font-size: .92rem; }
+    .callout b { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; display: block; margin-bottom: .3rem; color: var(--text-dim); }
+
+    /* ---- gears grid ---- */
+    .gears { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; border: var(--edge); }
+    .gears > article { border-right: var(--edge); }
+    .gears > article:last-child { border-right: 0; }
+    .gears .face { aspect-ratio: 1; display: grid; place-items: center; position: relative; overflow: hidden; }
+    .gears .face .cog { width: 46%; height: 46%; position: relative; z-index: 2; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+    .gears > article:hover .face .cog { transform: rotate(45deg); }
+    .gears .info { border-top: var(--edge); padding: 1.1rem; }
+    .gears .info h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; margin: 0; font-size: clamp(.95rem, 2.4vw, 1.2rem); overflow-wrap: break-word; }
+    .gears .info .role { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); margin: .1rem 0 .6rem; }
+    .gears .info p { margin: 0; font-size: .82rem; color: var(--text-dim); }
+    .gears .info code { font-family: var(--mono); font-size: .7rem; }
+
+    /* ================= FOOTER ================= */
+    footer.site { background: var(--surface-2); border-top: var(--edge-fat); }
+    footer.site .shell { padding: clamp(2.5rem,5vw,4rem) var(--gutter); display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; align-items: flex-end; }
+    footer.site .big { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2rem,6vw,4rem); line-height: .9; margin: 0; }
+    footer.site .fnav { display: flex; gap: 1.25rem; flex-wrap: wrap; font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+    footer.site .fnav a { color: var(--text-dim); text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; }
+    footer.site .fnav a:hover { color: var(--text); border-bottom-color: var(--orange-500); }
+    footer.site .colophon { font-family: var(--mono); font-size: .72rem; color: var(--text-dim); width: 100%; border-top: 2px solid var(--line); padding-top: 1.25rem; }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 900px) {
+      .hero .shell { grid-template-columns: 1fr; }
+      .composition { max-width: 22rem; }
+      .principles, .type-grid { grid-template-columns: 1fr; }
+      .principles > div, .type-grid > div { border-right: 0; border-bottom: var(--edge); }
+      .principles > div:last-child, .type-grid > div:last-child { border-bottom: 0; }
+      .gear-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .primitives { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .components { grid-template-columns: minmax(0,1fr); }
+      .gears { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .gears > article:nth-child(2n) { border-right: 0; }
+      .gears > article:nth-child(-n+2) { border-bottom: var(--edge); }
+      .sec-head p { margin-left: 0; }
+    }
+    @media (max-width: 560px) {
+      .ramp { grid-template-columns: 2.6rem repeat(9, minmax(0,1fr)); gap: 2px; }
+      .ramp .name { font-size: .62rem; }
+      .swatch { min-height: 30px; }
+      .swatch .h { display: none; }
+      .neutral-note, .gear-row { grid-template-columns: 1fr; }
+      .hero-meta { gap: 1.25rem; }
+      .hero .lead { max-width: none; }
+      .tag { letter-spacing: .1em; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- reusable cog symbol -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="cog">
+        <path d="M50 4 58 4 61 18 A34 34 0 0 1 71 22 L82 13 88 19 79 30 A34 34 0 0 1 84 40 L98 42 98 58 84 60 A34 34 0 0 1 79 70 L88 81 82 87 71 78 A34 34 0 0 1 61 82 L58 96 42 96 39 82 A34 34 0 0 1 29 78 L18 87 12 81 21 70 A34 34 0 0 1 16 60 L2 58 2 42 16 40 A34 34 0 0 1 21 30 L12 19 18 13 29 22 A34 34 0 0 1 39 18 Z"/>
+        <circle cx="50" cy="50" r="15" style="fill:var(--hole)"/>
+      </g>
+    </defs>
+  </svg>
+
+  <header class="bar">
+    <div class="shell">
+      <a class="brand" href="#top">
+        <svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="var(--orange-500)"/></svg>
+        GEARS / DESIGN SYSTEM
+      </a>
+      <nav aria-label="Sections">
+        <a href="#color">Colour</a>
+        <a href="#type">Type</a>
+        <a href="#shape">Shape</a>
+        <a href="#components">Components</a>
+        <a href="#gears">Gears</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="top" style="border-top:0">
+      <div class="shell">
+        <div class="hero-copy">
+          <p class="tag">The Gears Design System · v1.0 · Bauhaus Edition</p>
+          <p class="neon">GEARS</p>
+          <h1>One geometry. <em>Four gears.</em></h1>
+          <p class="lead">Every screen reduces to three Bauhaus primitives — the circle, the bar, the right angle — drawn from nine colour ramps. Each of the four gears carries one colour as its signature.</p>
+          <div class="hero-gears">
+            <span class="hg"><svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="#FD6F17"/></svg>Product</span>
+            <span class="hg"><svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="#F1273F"/></svg>Research</span>
+            <span class="hg"><svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="#9749FD"/></svg>Design</span>
+            <span class="hg"><svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="#4955FD"/></svg>Development</span>
+          </div>
+        </div>
+
+        <div class="composition" aria-hidden="true">
+          <svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+            <g class="anim a1">
+              <rect x="0" y="0" width="14" height="400" style="fill:var(--line)"/>
+              <rect x="22" y="0" width="7" height="400" style="fill:var(--line)"/>
+            </g>
+            <circle class="anim a2" cx="175" cy="128" r="92" fill="#F1273F"/>
+            <circle class="anim a3" cx="175" cy="272" r="92" fill="#FD6F17" style="mix-blend-mode:var(--blend)"/>
+            <path class="anim a4" d="M0 400 L0 300 A100 100 0 0 1 100 400 Z" fill="#7F27F1"/>
+            <rect class="anim a5" x="0" y="384" width="300" height="16" fill="#2735F1"/>
+            <circle class="anim a4" cx="262" cy="40" r="22" fill="#F1DA27"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PRINCIPLES ================= -->
+    <section><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">00</span>
+        <h2>Principles</h2>
+        <p>Three rules the whole system answers to. When in doubt, subtract.</p>
+      </div>
+      <div class="principles">
+        <div>
+          <svg class="shape" viewBox="0 0 120 68" aria-hidden="true"><circle cx="34" cy="34" r="30" fill="#F1273F"/><rect x="70" y="4" width="46" height="60" style="fill:var(--line)"/></svg>
+          <h3>Primary forms only</h3>
+          <p>Compose from circles, bars, and squares. No gradients, no ornament a ruler and compass couldn't draw.</p>
+        </div>
+        <div>
+          <svg class="shape" viewBox="0 0 120 68" aria-hidden="true"><rect x="0" y="0" width="120" height="14" fill="#2735F1"/><rect x="0" y="27" width="90" height="14" style="fill:var(--line)"/><rect x="0" y="54" width="60" height="14" fill="#FD6F17"/></svg>
+          <h3>The grid is visible</h3>
+          <p>Alignment is the decoration. Hard rules divide the page; the underlying grid is shown, not hidden.</p>
+        </div>
+        <div>
+          <svg class="shape" viewBox="0 0 120 68" aria-hidden="true"><rect x="0" y="0" width="120" height="68" fill="#F1DA27"/><path d="M0 68 A68 68 0 0 1 68 0 L68 68 Z" fill="#7F27F1"/></svg>
+          <h3>Colour with intent</h3>
+          <p>One signature colour leads each composition. The rest is ink and surface. Colour marks the gear, never fills for filling's sake.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- ================= COLOUR ================= -->
+    <section id="color"><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">01</span>
+        <h2>Colour</h2>
+        <p>Four signatures do the talking; nine ramps hold the reserve. Click any chip to copy its hex.</p>
+      </div>
+
+      <p class="tag" style="margin-bottom:1rem">Gear signatures — the 500 each gear owns</p>
+      <div class="gear-row" id="gearRow"></div>
+
+      <p class="tag" style="margin-bottom:.75rem">Full ramps — 100 (light) → 900 (ink)</p>
+      <div class="ramp-legend">
+        <span>100</span><span>200</span><span>300</span><span>400</span><span>500 · base</span><span>600</span><span>700</span><span>800</span><span>900</span>
+      </div>
+      <div class="ramps" id="ramps"></div>
+
+      <div class="neutral-note">
+        <div class="card">
+          <span class="dot" style="background:#1C1C1C"></span>
+          <div><b>Ink</b> <code>gray-900 · #1C1C1C</code><p>The dark anchor. Page surface in dark mode; every rule and line of type in light mode.</p></div>
+        </div>
+        <div class="card">
+          <span class="dot" style="background:#F1EBDD"></span>
+          <div><b>Paper</b> <code>#F1EBDD · added</code><p>The warm Bauhaus canvas. Page surface in light mode; text and rules in dark mode. The one value outside colors.json.</p></div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- ================= TYPOGRAPHY ================= -->
+    <section id="type"><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">02</span>
+        <h2>Typography</h2>
+        <p>Four roles. Monoton shouts once, Host Grotesk carries the headlines, Inter explains, mono measures.</p>
+      </div>
+      <div class="type-grid">
+        <div>
+          <p class="role">Signature · Monoton</p>
+          <p class="spec s-brand">Gears</p>
+          <p class="desc">The neon wordmark — used exactly once, large. Never for headings, labels, or anything that must stay legible small.</p>
+        </div>
+        <div>
+          <p class="role">Display · Host Grotesk 800</p>
+          <p class="spec s-display">Aa</p>
+          <p class="desc">Headlines and section titles, uppercase, tight tracking. The workhorse for anything loud.</p>
+        </div>
+        <div>
+          <p class="role">Body · Inter 400–600</p>
+          <p class="spec s-body">Aa</p>
+          <p class="desc">Running text, leads, labels, and eyebrows (tracked, uppercase). Reads clean at every size.</p>
+        </div>
+      </div>
+      <div class="scale">
+        <div><span class="lbl">Signature</span><span class="sample" style="font-family:var(--brand);color:var(--orange-500);font-size:clamp(1.4rem,4vw,2.4rem);letter-spacing:.02em">GEARS</span></div>
+        <div><span class="lbl">Display / H1</span><span class="sample" style="font-size:clamp(1.4rem,5vw,3rem)">Form follows the gear</span></div>
+        <div><span class="lbl">H2 / 2.9rem</span><span class="sample" style="font-size:clamp(1.3rem,4vw,2.2rem)">Section heading</span></div>
+        <div><span class="lbl">H3 / 1.2rem</span><span class="sample" style="font-size:1.2rem">Component title</span></div>
+        <div><span class="lbl">Mono label</span><span class="sample" style="font-family:var(--mono);font-size:.8rem;letter-spacing:.1em">TOKEN · #FD6F17 · --orange-500</span></div>
+      </div>
+    </div></section>
+
+    <!-- ================= SHAPE ================= -->
+    <section id="shape"><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">03</span>
+        <h2>Shape language</h2>
+        <p>The full vocabulary. Everything on a Gears surface is built from these five marks.</p>
+      </div>
+      <div class="primitives">
+        <div class="primitive"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#F1273F"/></svg><span>Circle</span></div>
+        <div class="primitive"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M2 50 A48 48 0 0 1 98 50 Z" fill="#FD6F17"/></svg><span>Half</span></div>
+        <div class="primitive"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M2 98 L2 2 A96 96 0 0 1 98 98 Z" fill="#7F27F1"/></svg><span>Quarter</span></div>
+        <div class="primitive"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="2" y="2" width="96" height="96" fill="#2735F1"/></svg><span>Square</span></div>
+        <div class="primitive"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="2" y="30" width="96" height="18" style="fill:var(--line)"/><rect x="2" y="58" width="96" height="18" fill="#F1DA27"/></svg><span>Bar</span></div>
+      </div>
+      <div class="banner">
+        <div class="msg">
+          <h3>Composition is the product</h3>
+          <p>Overlap, rotate, and crop the primitives against the grid. Let one shape run off the edge. Blend overlaps to earn a third colour for free.</p>
+        </div>
+        <svg class="deco" viewBox="0 0 600 200" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+          <circle cx="470" cy="60" r="120" fill="#F1DA27"/>
+          <circle cx="540" cy="150" r="120" fill="#FD6F17" style="mix-blend-mode:multiply"/>
+          <rect x="300" y="0" width="10" height="200" fill="#F2ECDE"/>
+        </svg>
+      </div>
+    </div></section>
+
+    <!-- ================= COMPONENTS ================= -->
+    <section id="components"><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">04</span>
+        <h2>Components</h2>
+        <p>The system applied. Hard edges, offset shadows only on lift, colour reserved for the signature move.</p>
+      </div>
+      <div class="components">
+        <div class="demo">
+          <div class="demo-head"><span>Buttons</span><span>.btn</span></div>
+          <div class="demo-body">
+            <a class="btn" href="#components">Primary</a>
+            <a class="btn ghost" href="#components">Ghost</a>
+            <a class="btn accent" href="#components">Accent</a>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span>Gear badges</span><span>.badge</span></div>
+          <div class="demo-body">
+            <span class="badge"><svg class="cog" viewBox="0 0 100 100"><use href="#cog" fill="#FD6F17"/></svg>Product</span>
+            <span class="badge"><svg class="cog" viewBox="0 0 100 100"><use href="#cog" fill="#F1273F"/></svg>Research</span>
+            <span class="badge"><svg class="cog" viewBox="0 0 100 100"><use href="#cog" fill="#9749FD"/></svg>Design</span>
+            <span class="badge"><svg class="cog" viewBox="0 0 100 100"><use href="#cog" fill="#4955FD"/></svg>Dev</span>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span>Identity card</span><span>.idcard</span></div>
+          <div class="demo-body" style="display:block">
+            <div class="idcard">
+              <div class="top" style="background:#FD6F17">
+                <svg class="cog" viewBox="0 0 100 100"><use href="#cog" fill="#1C1C1C"/></svg>
+                <span class="n">GEAR 01</span>
+              </div>
+              <div class="body">
+                <h4>Product</h4>
+                <p>Turns raw intake into scoped, prioritised work.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo">
+          <div class="demo-head"><span>Callout</span><span>.callout</span></div>
+          <div class="demo-body" style="display:block">
+            <div class="callout">
+              <b>Note</b>
+              Intake isn't a gear. It's a process that runs inside every gear, on that gear's own terms.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- ================= GEARS ================= -->
+    <section id="gears"><div class="shell">
+      <div class="sec-head">
+        <span class="sec-num">05</span>
+        <h2>The four gears</h2>
+        <p>Each gear is one colour, one cog, one job. Hover a cog — it turns.</p>
+      </div>
+      <div class="gears" id="gearsGrid"></div>
+    </div></section>
+  </main>
+
+  <footer class="site">
+    <div class="shell">
+      <p class="big">Form<br>follows<br>the gear.</p>
+      <nav class="fnav" aria-label="Gears">
+        <a href="https://gears.run">gears.run</a>
+        <a href="https://product.gears.run">Product</a>
+        <a href="https://research.gears.run">Research</a>
+        <a href="https://design.gears.run">Design</a>
+        <a href="https://development.gears.run">Development</a>
+      </nav>
+      <p class="colophon">Gears Design System · Bauhaus Edition · Dark by default · Tokens sourced from colors.json</p>
+    </div>
+  </footer>
+
+  <script>
+    const RAMPS = {
+      red:   ['#FFE1E5','#FFA8B2','#FF808E','#FD495E','#F1273F','#C81429','#8C1725','#59171F','#2A0E11'],
+      orange:['#FFECE1','#FFCAA8','#FFB080','#FD8E49','#FD6F17','#C85A14','#8C4417','#593017','#2A190E'],
+      yellow:['#FFFBE1','#FFF5A8','#FFF080','#FDE849','#F1DA27','#C8B314','#8C7F17','#595117','#2A270E'],
+      lime:  ['#E5FFEF','#BDFFD6','#8FFFBA','#60F097','#27F174','#14C859','#178C44','#175930','#0E2A19'],
+      mint:  ['#E5FFFC','#BDFFF7','#8FFFF2','#60F0DF','#27F1D9','#14C8B3','#178C7F','#175951','#0E2A19'],
+      blue:  ['#E5F4FF','#BDE2FF','#8FCEFF','#60B2F0','#279AF1','#147AC8','#17598C','#173C59','#0E1E2A'],
+      indigo:['#E1E3FF','#A8AEFF','#8088FF','#4955FD','#2735F1','#1420C8','#171F8C','#171B59','#0E102A'],
+      purple:['#EEE1FF','#CEA8FF','#B780FF','#9749FD','#7F27F1','#6214C8','#4A178C','#341759','#1A0E2A'],
+      gray:  ['#FFFFFF','#E3E3E3','#C6C6C6','#A9A9A9','#8D8D8D','#707070','#545454','#383838','#1C1C1C'],
+    };
+    const STEPS = [100,200,300,400,500,600,700,800,900];
+
+    function ink(hex) {
+      const n = parseInt(hex.slice(1),16);
+      const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+      const L = (0.2126*r + 0.7152*g + 0.0722*b)/255;
+      return L > 0.55 ? '#1C1C1C' : '#F1EBDD';
+    }
+
+    async function copy(hex, el) {
+      try { await navigator.clipboard.writeText(hex); }
+      catch { const t=document.createElement('textarea'); t.value=hex; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+      el.classList.add('copied');
+      setTimeout(()=>el.classList.remove('copied'), 700);
+    }
+
+    const ramps = document.getElementById('ramps');
+    for (const [name, cols] of Object.entries(RAMPS)) {
+      const row = document.createElement('div');
+      row.className = 'ramp';
+      row.innerHTML = `<div class="name">${name}</div>`;
+      cols.forEach((hex, i) => {
+        const b = document.createElement('button');
+        b.className = 'swatch';
+        b.style.background = hex;
+        b.style.color = ink(hex);
+        b.title = `${name}-${STEPS[i]} · ${hex} — click to copy`;
+        b.setAttribute('aria-label', `Copy ${name}-${STEPS[i]} ${hex}`);
+        b.innerHTML = `<span class="h">${hex}</span>`;
+        b.addEventListener('click', () => copy(hex, b));
+        row.appendChild(b);
+      });
+      ramps.appendChild(row);
+    }
+
+    const GEARS = [
+      { n:'01', name:'Product',     role:'Orange-500', hex:'#FD6F17', desc:'Raw intake → scoped, prioritised work.' },
+      { n:'02', name:'Research',    role:'Red-500',    hex:'#F1273F', desc:'Questions → evidence that informs.' },
+      { n:'03', name:'Design',      role:'Purple-500', hex:'#7F27F1', desc:'Scope + evidence → buildable specs.' },
+      { n:'04', name:'Development', role:'Indigo-500', hex:'#2735F1', desc:'Specs → shipped, reliable software.' },
+    ];
+
+    const cog = (fill) => `<svg class="cog" viewBox="0 0 100 100" aria-hidden="true"><use href="#cog" fill="${fill}"/></svg>`;
+
+    document.getElementById('gearRow').innerHTML = GEARS.map(g => `
+      <div class="gear-swatch">
+        <div class="chip" style="background:${g.hex}">${cog(ink(g.hex))}</div>
+        <div class="meta"><b>${g.name}</b><code>${g.role} · ${g.hex}</code></div>
+      </div>`).join('');
+
+    document.getElementById('gearsGrid').innerHTML = GEARS.map(g => `
+      <article>
+        <div class="face" style="background:${g.hex}">${cog(ink(g.hex))}</div>
+        <div class="info">
+          <h3>${g.name}</h3>
+          <p class="role">Gear ${g.n} · <code>${g.role}</code></p>
+          <p>${g.desc}</p>
+        </div>
+      </article>`).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gears — a system for building software</title>
+  <meta name="description" content="Gears is a system for building software in four gears: Product, Research, Design, and Development.">
+  <style>
+    :root {
+      --fg: #111;
+      --muted: #666;
+      --accent: #0a3;
+      --bg: #fafafa;
+      --rule: #e5e5e5;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      margin: 0;
+    }
+    .wrap { max-width: 42rem; margin: 0 auto; padding: 0 1.25rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top header / nav bar (from minima, restyled to the gears palette) */
+    .site-header {
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    .site-header .wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    .site-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .site-title:hover { text-decoration: none; }
+    .site-nav { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; }
+    .site-nav a { color: var(--muted); }
+    .site-nav a:hover { color: var(--accent); }
+
+    main { padding-top: 2rem; padding-bottom: 1rem; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+    }
+    h1 { font-size: 2.25rem; line-height: 1.1; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
+    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2.5rem; }
+    h2 { font-size: 1.125rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
+    p { margin: 0 0 1rem; }
+
+    .gears { list-style: none; padding: 0; margin: 0 0 1rem; border-top: 1px solid var(--rule); }
+    .gears li { border-bottom: 1px solid var(--rule); }
+    .gears a { display: block; padding: 0.85rem 0; color: var(--fg); }
+    .gears a:hover { text-decoration: none; }
+    .gears a:hover .gear-name { text-decoration: underline; color: var(--accent); }
+    .gear-name { font-weight: 600; }
+    .gear-desc { color: var(--muted); }
+
+    .note {
+      border-left: 2px solid var(--rule);
+      padding-left: 1rem;
+      color: var(--muted);
+    }
+
+    /* Footer block (from minima, restyled to the gears palette) */
+    .site-footer {
+      border-top: 1px solid var(--rule);
+      margin-top: 3rem;
+    }
+    .site-footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+      font-size: 0.9rem;
+    }
+    .footer-about { flex: 1 1 16rem; }
+    .footer-title { font-weight: 700; color: var(--fg); margin: 0 0 0.5rem; }
+    .footer-desc { color: var(--muted); margin: 0; }
+    .footer-nav { flex: 0 1 auto; }
+    .footer-heading {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 0 0 0.6rem;
+    }
+    .footer-nav ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; }
+    .footer-nav a { color: var(--muted); }
+    .footer-nav a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="site-title" href="/">Gears</a>
+      <nav class="site-nav">
+        <a href="https://product.gears.run">Product</a>
+        <a href="https://research.gears.run">Research</a>
+        <a href="https://design.gears.run">Design</a>
+        <a href="https://development.gears.run">Development</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="eyebrow">The Gears System</p>
+    <h1>Gears</h1>
+    <p class="lead">A system for building software. It divides delivery into four gears — each with its own job, inputs, and outputs. The gears are non-linear: engage whichever one the work demands, in whatever order it demands.</p>
+
+    <section>
+      <h2>The four gears</h2>
+      <ul class="gears">
+        <li>
+          <a href="https://product.gears.run">
+            <span class="gear-name">Product</span> — <span class="gear-desc">how requests and feedback become scoped, prioritized product work.</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://research.gears.run">
+            <span class="gear-name">Research</span> — <span class="gear-desc">how questions become evidence that informs design and development.</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://design.gears.run">
+            <span class="gear-name">Design</span> — <span class="gear-desc">how product scope and research evidence become buildable specifications.</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://development.gears.run">
+            <span class="gear-name">Development</span> — <span class="gear-desc">how specifications become shipped, reliable software.</span>
+          </a>
+        </li>
+      </ul>
+      <p>Each gear is its own guide. Pick the one closest to the work you do.</p>
+    </section>
+
+    <section>
+      <h2>Intake isn't a gear</h2>
+      <p class="note">Intake — capturing requests, feedback, and ideas — isn't a gear. It's a process that happens inside every gear, on that gear's own terms. Product's intake, for example, lives at <a href="https://product.gears.run/intake">product.gears.run/intake</a>.</p>
+    </section>
+
+    <section>
+      <h2>Why gears</h2>
+      <p>Gears separates concerns that usually blur together. Each gear has its own inputs, outputs, owners, and instructions, so responsibilities are explicit instead of accidental. Because the gears are non-linear, you engage whichever one the work needs — without forcing everything through a single sequence. The result is a system you can reason about, debug, and improve one gear at a time.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-about">
+        <p class="footer-title">Gears</p>
+        <p class="footer-desc">A system for building software in four gears. This site is the overview; each gear has its own guide on its own subdomain.</p>
+      </div>
+      <nav class="footer-nav">
+        <p class="footer-heading">The gears</p>
+        <ul>
+          <li><a href="https://product.gears.run">Product</a></li>
+          <li><a href="https://research.gears.run">Research</a></li>
+          <li><a href="https://design.gears.run">Design</a></li>
+          <li><a href="https://development.gears.run">Development</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
