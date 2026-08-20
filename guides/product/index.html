@@ -8,216 +8,174 @@
   <meta name="color-scheme" content="dark light">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400..800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* This page becomes any other gear by changing --gear and --ink together.
+       Only the type colour flips with the plate; the two gears keep their
+       own tones so the pair always reads as two distinct gears.
+         Product      --gear #FD6F17 orange-500   --ink var(--dark)
+         Research     --gear #F1273F red-500      --ink var(--paper)
+         Design       --gear #7F27F1 purple-500   --ink var(--paper)
+         Development  --gear #2735F1 indigo-500   --ink var(--paper)
+       Nothing else differs. */
     :root {
-      --signature: #FD6F17;
-      --hero-ink:  #1C1C1C;
-      --cream:     #FFECE1;
-      --surface:   #1C1C1C;
-      --text:      #FFECE1;
-      --text-dim:  #A9A9A9;
+      --gear:  #FD6F17;         /* orange-500 — the plate */
+      --paper: #FFECE1;         /* orange-100 — page text, and the driving gear */
+      --dark:  #1C1C1C;         /* gray-900   — page ground, and the driven gear */
+      --dim:   #A9A9A9;         /* gray-400   — meta and hairlines */
+      --ink:   var(--dark);     /* type on the plate — the half that flips */
+
       --display: "Host Grotesk", system-ui, sans-serif;
       --body: "Inter", system-ui, sans-serif;
-      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
-      --col: 44rem;
-      --hero-col: 26rem;
+      --col: 36rem;
       --gutter: clamp(1.25rem, 5vw, 2.5rem);
     }
-    @media (prefers-color-scheme: light) {
-      :root { --surface: #F7F7F7; --text: #1C1C1C; --text-dim: #707070; }
-    }
     *, *::before, *::after { box-sizing: border-box; }
-    :focus-visible { outline: 3px solid var(--signature); outline-offset: 3px; }
-    body { margin: 0; background: var(--surface); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.6; }
-
-    /* One column axis for the whole page — the hero copy and the body text
-       share it, so the panel reads as the top of the page rather than a
-       banner sitting on top of it. */
-    /* Everything sits on one left margin — hero copy and body alike. */
+    body {
+      margin: 0;
+      background: var(--dark);
+      color: var(--paper);
+      font: 400 17px/1.6 var(--body);
+    }
+    :focus-visible { outline: 3px solid var(--gear); outline-offset: 3px; }
     .col { max-width: var(--col); margin-inline: 0; padding-inline: var(--gutter); }
-    /* The hero copy is short — a narrower measure leaves the artwork room
-       to sit beside it well before the layout gets wide. */
-    .panel .col { max-width: var(--hero-col); }
 
-    /* ---- Panel = the gear body. Its teeth bite into the page below. ---- */
-    .panel {
+    /* ---- The plate ---------------------------------------------------
+       A window onto the machine. A gear may only be cut by this frame's
+       own edge, so the artwork spans the whole plate and keeps clear of
+       the copy by placement rather than by clipping. */
+    .plate {
       position: relative;
       overflow: hidden;
-      background: var(--signature);
-      min-height: 76vh;
+      background: var(--gear);
+      color: var(--ink);
+      min-height: 74vh;
       display: flex;
       align-items: center;
       padding: clamp(4rem, 10vh, 7rem) 0;
     }
-    /* The artwork starts past the text column's furthest possible edge, so
-       it cannot overlap the copy at any width. */
-    /* The panel is a frame: a gear may only ever be cut by its edges, never
-       by a boundary inside the field. The artwork spans the whole panel and
-       the gears are positioned clear of the copy rather than clipped by it. */
-    .panel > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    @media (max-width: 46rem), (max-aspect-ratio: 3/4) {
-      /* Too narrow, or too tall for the scale to stay bounded — the lead arc
-         steps out; the tone-on-tone arcs are texture and stay. */
-      .gear--lead { display: none; }
-    }
-    .panel > .col { position: relative; z-index: 1; }
+    .plate svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .plate .col { position: relative; z-index: 1; }
 
+    /* Two gears, one pitch. Scroll turns the pair at their true ratio. */
     .gear { transform-box: view-box; animation: turn var(--dur) linear infinite; }
     @keyframes turn { to { transform: rotate(360deg); } }
     @supports (animation-timeline: scroll()) {
       .gear {
-        animation-name: spin;
+        animation-name: mesh;
         animation-duration: auto;
         animation-timing-function: linear;
         animation-iteration-count: 1;
         animation-fill-mode: both;
         animation-timeline: scroll(root block);
       }
-      @keyframes spin { to { transform: rotate(var(--spin)); } }
+      @keyframes mesh { to { transform: rotate(var(--spin)); } }
     }
     @media (prefers-reduced-motion: reduce) { .gear { animation: none; } }
+
+    /* Below 76rem the copy fills the width, so the pair moves to the
+       bottom edge rather than half the mechanism being switched off. */
+    @media (max-width: 76rem) {
+      .plate { flex-direction: column; align-items: stretch; padding-bottom: 0; }
+      .plate .col { order: 1; }
+      .plate svg { order: 2; position: static; height: 34vh; margin-top: clamp(2.5rem, 7vh, 4.5rem); }
+    }
 
     .back {
       display: block;
       width: fit-content;
-      margin-bottom: clamp(2.5rem, 8vh, 4.5rem);
-      font-family: var(--mono);
-      font-size: 0.66rem;
+      margin-bottom: clamp(2rem, 7vh, 4rem);
+      font: 500 0.7rem/1 var(--body);
       text-transform: uppercase;
       letter-spacing: 0.16em;
       text-decoration: none;
-      color: var(--hero-ink);
-      opacity: 0.7;
+      color: inherit;
+      opacity: 0.65;
     }
-    .back:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
-    .badge {
-      display: inline-block;
-      margin: 0 0 1rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: var(--hero-ink);
-      color: var(--signature);
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
+    .back:hover { opacity: 1; }
     h1 {
       margin: 0;
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: clamp(2.4rem, 7vw, 4.4rem);
-      line-height: 0.94;
+      font: 800 clamp(2.6rem, 8vw, 5rem)/0.94 var(--display);
       letter-spacing: -0.035em;
-      max-width: 12ch;
-      color: var(--hero-ink);
     }
     .lede {
-      margin: 1rem 0 0;
-      font-family: var(--display);
-      font-weight: 500;
-      font-size: clamp(1.05rem, 2.3vw, 1.35rem);
-      line-height: 1.35;
-      letter-spacing: -0.015em;
+      margin: 1.1rem 0 0;
+      font-size: clamp(1.05rem, 2.3vw, 1.3rem);
+      line-height: 1.4;
       max-width: 30ch;
-      color: var(--hero-ink);
-      opacity: 0.82;
     }
 
-    /* ---- Body. Rules are tick rows — the gear tooth pitch, carried in. -- */
-    main { padding-top: clamp(3rem, 9vh, 5rem); }
-    section { margin-bottom: clamp(3rem, 8vh, 4rem); }
-    h2 { font-family: var(--display); font-weight: 700; font-size: 1.35rem; letter-spacing: -0.02em; margin: 0 0 1.5rem; }
+    /* ---- The page ----------------------------------------------------- */
+    main { padding-top: clamp(4rem, 11vh, 6.5rem); padding-bottom: 5rem; }
+    section { margin-bottom: clamp(3rem, 8vh, 4.5rem); }
+    h2 { margin: 0 0 1.5rem; font: 600 1.3rem/1.2 var(--display); letter-spacing: -0.02em; }
     p { margin: 0 0 1rem; }
-    .ticks {
-      height: 4px;
-      background-image: repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--text-dim) 70%, transparent) 0 5px, transparent 5px 11px);
-    }
+    ol, ul { list-style: none; padding: 0; margin: 0; }
 
-    .takeaways { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.75rem 2.5rem; counter-reset: t; }
-    @media (min-width: 44rem) { .takeaways { grid-template-columns: 1fr 1fr; } }
-    .takeaways li { counter-increment: t; }
-    .takeaways li::before {
-      content: counter(t);
+    .list li { padding: 1rem 0 1.1rem; border-top: 1px solid var(--dim); }
+    .list li:last-child { border-bottom: 1px solid var(--dim); }
+    .label {
       display: block;
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      color: var(--text-dim);
-      padding-top: 0.5rem;
-      margin-bottom: 0.5rem;
-      border-top: 0;
+      margin-bottom: 0.45rem;
+      font: 500 0.7rem/1 var(--body);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--dim);
     }
-    .takeaways li { background-image: repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--text-dim) 70%, transparent) 0 5px, transparent 5px 11px);
-      background-size: 100% 3px; background-repeat: no-repeat; padding-top: 0.35rem; }
-
-    .stages { list-style: none; padding: 0; margin: 0; }
-    .stages li {
-      display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem;
-      padding: 1rem 0 0.9rem;
-      background-image: repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--text-dim) 70%, transparent) 0 5px, transparent 5px 11px);
-      background-size: 100% 3px; background-repeat: no-repeat;
+    .links a {
+      font: 600 1.05rem/1.3 var(--display);
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--dim);
     }
-    .stages b { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--signature); padding-top: 0.2rem; }
-
-    .links { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
-    .links a { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--text); text-decoration: none; border-bottom: 2px solid var(--signature); }
-    .links a:hover { color: var(--signature); }
-    .links .meta { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.15rem; }
-
-    footer { margin-top: clamp(3rem, 8vh, 4rem); padding: 1.75rem 0 4rem;
-      background-image: repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--text-dim) 70%, transparent) 0 5px, transparent 5px 11px);
-      background-size: 100% 3px; background-repeat: no-repeat; }
-    footer nav { display: flex; flex-wrap: wrap; gap: 1.25rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; }
-    footer a { color: var(--text-dim); text-decoration: none; }
-    footer a:hover { color: var(--signature); }
+    .links a:hover { border-bottom-color: var(--paper); }
+    .links .meta { margin-top: 0.3rem; color: var(--dim); font-size: 0.9rem; }
+    footer { padding-top: 1.75rem; border-top: 1px solid var(--dim); }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+    footer a {
+      font: 500 0.7rem/1 var(--body);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--dim);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--paper); }
   </style>
 </head>
 <body>
 
-  <header class="panel">
-    <svg viewBox="0 0 400 300" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g class="gear gear--lead" style="--dur:150s; --spin:-300deg; transform-origin:580px 150px"><path d="M830.0 146.1L856.2 145.7L856.2 154.3L830.0 153.9ZM829.7 161.8L855.9 163.0L855.4 171.7L829.2 169.6ZM828.5 177.4L854.6 180.3L853.5 188.9L827.5 185.2ZM826.3 193.0L852.1 197.5L850.5 206.0L824.8 200.7ZM823.1 208.4L848.6 214.5L846.5 222.9L821.1 216.0ZM818.9 223.5L844.0 231.2L841.4 239.5L816.5 231.0ZM813.9 238.4L838.4 247.6L835.2 255.7L811.0 245.7ZM807.9 252.9L831.8 263.7L828.1 271.5L804.5 260.0ZM800.9 267.0L824.1 279.3L820.0 286.9L797.2 273.9ZM793.2 280.6L815.5 294.3L810.9 301.7L789.0 287.3ZM784.5 293.8L806.0 308.8L800.9 315.9L779.9 300.1ZM775.1 306.3L795.6 322.7L790.1 329.4L770.1 312.4ZM764.9 318.3L784.3 335.9L778.4 342.2L759.5 324.0ZM754.0 329.5L772.2 348.4L765.9 354.3L748.3 334.9ZM742.4 340.1L759.4 360.1L752.7 365.6L736.3 345.1ZM730.1 349.9L745.9 370.9L738.8 376.0L723.8 354.5ZM717.3 359.0L731.7 380.9L724.3 385.5L710.6 363.2ZM703.9 367.2L716.9 390.0L709.3 394.1L697.0 370.9ZM690.0 374.5L701.5 398.1L693.7 401.8L682.9 377.9ZM675.7 381.0L685.7 405.2L677.6 408.4L668.4 383.9ZM661.0 386.5L669.5 411.4L661.2 414.0L653.5 388.9ZM646.0 391.1L652.9 416.5L644.5 418.6L638.4 393.1ZM630.7 394.8L636.0 420.5L627.5 422.1L623.0 396.3ZM615.2 397.5L618.9 423.5L610.3 424.6L607.4 398.5ZM599.6 399.2L601.7 425.4L593.0 425.9L591.8 399.7ZM583.9 400.0L584.3 426.2L575.7 426.2L576.1 400.0ZM568.2 399.7L567.0 425.9L558.3 425.4L560.4 399.2ZM552.6 398.5L549.7 424.6L541.1 423.5L544.8 397.5ZM537.0 396.3L532.5 422.1L524.0 420.5L529.3 394.8ZM521.6 393.1L515.5 418.6L507.1 416.5L514.0 391.1ZM506.5 388.9L498.8 414.0L490.5 411.4L499.0 386.5ZM491.6 383.9L482.4 408.4L474.3 405.2L484.3 381.0ZM477.1 377.9L466.3 401.8L458.5 398.1L470.0 374.5ZM463.0 370.9L450.7 394.1L443.1 390.0L456.1 367.2ZM449.4 363.2L435.7 385.5L428.3 380.9L442.7 359.0ZM436.2 354.5L421.2 376.0L414.1 370.9L429.9 349.9ZM423.7 345.1L407.3 365.6L400.6 360.1L417.6 340.1ZM411.7 334.9L394.1 354.3L387.8 348.4L406.0 329.5ZM400.5 324.0L381.6 342.2L375.7 335.9L395.1 318.3ZM389.9 312.4L369.9 329.4L364.4 322.7L384.9 306.3ZM380.1 300.1L359.1 315.9L354.0 308.8L375.5 293.8ZM371.0 287.3L349.1 301.7L344.5 294.3L366.8 280.6ZM362.8 273.9L340.0 286.9L335.9 279.3L359.1 267.0ZM355.5 260.0L331.9 271.5L328.2 263.7L352.1 252.9ZM349.0 245.7L324.8 255.7L321.6 247.6L346.1 238.4ZM343.5 231.0L318.6 239.5L316.0 231.2L341.1 223.5ZM338.9 216.0L313.5 222.9L311.4 214.5L336.9 208.4ZM335.2 200.7L309.5 206.0L307.9 197.5L333.7 193.0ZM332.5 185.2L306.5 188.9L305.4 180.3L331.5 177.4ZM330.8 169.6L304.6 171.7L304.1 163.0L330.3 161.8ZM330.0 153.9L303.8 154.3L303.8 145.7L330.0 146.1ZM330.3 138.2L304.1 137.0L304.6 128.3L330.8 130.4ZM331.5 122.6L305.4 119.7L306.5 111.1L332.5 114.8ZM333.7 107.0L307.9 102.5L309.5 94.0L335.2 99.3ZM336.9 91.6L311.4 85.5L313.5 77.1L338.9 84.0ZM341.1 76.5L316.0 68.8L318.6 60.5L343.5 69.0ZM346.1 61.6L321.6 52.4L324.8 44.3L349.0 54.3ZM352.1 47.1L328.2 36.3L331.9 28.5L355.5 40.0ZM359.1 33.0L335.9 20.7L340.0 13.1L362.8 26.1ZM366.8 19.4L344.5 5.7L349.1 -1.7L371.0 12.7ZM375.5 6.2L354.0 -8.8L359.1 -15.9L380.1 -0.1ZM384.9 -6.3L364.4 -22.7L369.9 -29.4L389.9 -12.4ZM395.1 -18.3L375.7 -35.9L381.6 -42.2L400.5 -24.0ZM406.0 -29.5L387.8 -48.4L394.1 -54.3L411.7 -34.9ZM417.6 -40.1L400.6 -60.1L407.3 -65.6L423.7 -45.1ZM429.9 -49.9L414.1 -70.9L421.2 -76.0L436.2 -54.5ZM442.7 -59.0L428.3 -80.9L435.7 -85.5L449.4 -63.2ZM456.1 -67.2L443.1 -90.0L450.7 -94.1L463.0 -70.9ZM470.0 -74.5L458.5 -98.1L466.3 -101.8L477.1 -77.9ZM484.3 -81.0L474.3 -105.2L482.4 -108.4L491.6 -83.9ZM499.0 -86.5L490.5 -111.4L498.8 -114.0L506.5 -88.9ZM514.0 -91.1L507.1 -116.5L515.5 -118.6L521.6 -93.1ZM529.3 -94.8L524.0 -120.5L532.5 -122.1L537.0 -96.3ZM544.8 -97.5L541.1 -123.5L549.7 -124.6L552.6 -98.5ZM560.4 -99.2L558.3 -125.4L567.0 -125.9L568.2 -99.7ZM576.1 -100.0L575.7 -126.2L584.3 -126.2L583.9 -100.0ZM591.8 -99.7L593.0 -125.9L601.7 -125.4L599.6 -99.2ZM607.4 -98.5L610.3 -124.6L618.9 -123.5L615.2 -97.5ZM623.0 -96.3L627.5 -122.1L636.0 -120.5L630.7 -94.8ZM638.4 -93.1L644.5 -118.6L652.9 -116.5L646.0 -91.1ZM653.5 -88.9L661.2 -114.0L669.5 -111.4L661.0 -86.5ZM668.4 -83.9L677.6 -108.4L685.7 -105.2L675.7 -81.0ZM682.9 -77.9L693.7 -101.8L701.5 -98.1L690.0 -74.5ZM697.0 -70.9L709.3 -94.1L716.9 -90.0L703.9 -67.2ZM710.6 -63.2L724.3 -85.5L731.7 -80.9L717.3 -59.0ZM723.8 -54.5L738.8 -76.0L745.9 -70.9L730.1 -49.9ZM736.3 -45.1L752.7 -65.6L759.4 -60.1L742.4 -40.1ZM748.3 -34.9L765.9 -54.3L772.2 -48.4L754.0 -29.5ZM759.5 -24.0L778.4 -42.2L784.3 -35.9L764.9 -18.3ZM770.1 -12.4L790.1 -29.4L795.6 -22.7L775.1 -6.3ZM779.9 -0.1L800.9 -15.9L806.0 -8.8L784.5 6.2ZM789.0 12.7L810.9 -1.7L815.5 5.7L793.2 19.4ZM797.2 26.1L820.0 13.1L824.1 20.7L800.9 33.0ZM804.5 40.0L828.1 28.5L831.8 36.3L807.9 47.1ZM811.0 54.3L835.2 44.3L838.4 52.4L813.9 61.6ZM816.5 69.0L841.4 60.5L844.0 68.8L818.9 76.5ZM821.1 84.0L846.5 77.1L848.6 85.5L823.1 91.6ZM824.8 99.3L850.5 94.0L852.1 102.5L826.3 107.0ZM827.5 114.8L853.5 111.1L854.6 119.7L828.5 122.6ZM829.2 130.4L855.4 128.3L855.9 137.0L829.7 138.2Z" fill="var(--cream)"/></g><g class="gear" style="--dur:130s; --spin:336deg; transform-origin:640px 360px"><path d="M940.0 356.1L971.5 355.7L971.5 364.3L940.0 363.9ZM939.8 371.8L971.2 373.0L970.8 381.7L939.4 379.6ZM938.7 387.5L970.1 390.3L969.2 399.0L937.9 395.3ZM936.9 403.0L968.1 407.6L966.7 416.1L935.7 410.8ZM934.2 418.5L965.1 424.7L963.3 433.2L932.6 426.2ZM930.8 433.8L961.3 441.6L959.1 450.0L928.7 441.4ZM926.5 449.0L956.6 458.3L953.9 466.6L924.1 456.4ZM921.5 463.8L951.0 474.7L947.9 482.8L918.6 471.2ZM915.6 478.4L944.6 490.9L941.0 498.8L912.4 485.6ZM909.1 492.7L937.3 506.6L933.4 514.4L905.5 499.7ZM901.7 506.6L929.2 522.0L924.9 529.5L897.8 513.4ZM893.7 520.1L920.4 536.9L915.6 544.2L889.4 526.7ZM885.0 533.1L910.7 551.3L905.6 558.3L880.4 539.5ZM875.6 545.7L900.3 565.2L894.9 572.0L870.7 551.8ZM865.6 557.8L889.2 578.6L883.4 585.0L860.3 563.6ZM854.9 569.3L877.5 591.3L871.3 597.5L849.3 574.9ZM843.6 580.3L865.0 603.4L858.6 609.2L837.8 585.6ZM831.8 590.7L852.0 614.9L845.2 620.3L825.7 595.6ZM819.5 600.4L838.3 625.6L831.3 630.7L813.1 605.0ZM806.7 609.4L824.2 635.6L816.9 640.4L800.1 613.7ZM793.4 617.8L809.5 644.9L802.0 649.2L786.6 621.7ZM779.7 625.5L794.4 653.4L786.6 657.3L772.7 629.1ZM765.6 632.4L778.8 661.0L770.9 664.6L758.4 635.6ZM751.2 638.6L762.8 667.9L754.7 671.0L743.8 641.5ZM736.4 644.1L746.6 673.9L738.3 676.6L729.0 646.5ZM721.4 648.7L730.0 679.1L721.6 681.3L713.8 650.8ZM706.2 652.6L713.2 683.3L704.7 685.1L698.5 654.2ZM690.8 655.7L696.1 686.7L687.6 688.1L683.0 656.9ZM675.3 657.9L679.0 689.2L670.3 690.1L667.5 658.7ZM659.6 659.4L661.7 690.8L653.0 691.2L651.8 659.8ZM643.9 660.0L644.3 691.5L635.7 691.5L636.1 660.0ZM628.2 659.8L627.0 691.2L618.3 690.8L620.4 659.4ZM612.5 658.7L609.7 690.1L601.0 689.2L604.7 657.9ZM597.0 656.9L592.4 688.1L583.9 686.7L589.2 655.7ZM581.5 654.2L575.3 685.1L566.8 683.3L573.8 652.6ZM566.2 650.8L558.4 681.3L550.0 679.1L558.6 648.7ZM551.0 646.5L541.7 676.6L533.4 673.9L543.6 644.1ZM536.2 641.5L525.3 671.0L517.2 667.9L528.8 638.6ZM521.6 635.6L509.1 664.6L501.2 661.0L514.4 632.4ZM507.3 629.1L493.4 657.3L485.6 653.4L500.3 625.5ZM493.4 621.7L478.0 649.2L470.5 644.9L486.6 617.8ZM479.9 613.7L463.1 640.4L455.8 635.6L473.3 609.4ZM466.9 605.0L448.7 630.7L441.7 625.6L460.5 600.4ZM454.3 595.6L434.8 620.3L428.0 614.9L448.2 590.7ZM442.2 585.6L421.4 609.2L415.0 603.4L436.4 580.3ZM430.7 574.9L408.7 597.5L402.5 591.3L425.1 569.3ZM419.7 563.6L396.6 585.0L390.8 578.6L414.4 557.8ZM409.3 551.8L385.1 572.0L379.7 565.2L404.4 545.7ZM399.6 539.5L374.4 558.3L369.3 551.3L395.0 533.1ZM390.6 526.7L364.4 544.2L359.6 536.9L386.3 520.1ZM382.2 513.4L355.1 529.5L350.8 522.0L378.3 506.6ZM374.5 499.7L346.6 514.4L342.7 506.6L370.9 492.7ZM367.6 485.6L339.0 498.8L335.4 490.9L364.4 478.4ZM361.4 471.2L332.1 482.8L329.0 474.7L358.5 463.8ZM355.9 456.4L326.1 466.6L323.4 458.3L353.5 449.0ZM351.3 441.4L320.9 450.0L318.7 441.6L349.2 433.8ZM347.4 426.2L316.7 433.2L314.9 424.7L345.8 418.5ZM344.3 410.8L313.3 416.1L311.9 407.6L343.1 403.0ZM342.1 395.3L310.8 399.0L309.9 390.3L341.3 387.5ZM340.6 379.6L309.2 381.7L308.8 373.0L340.2 371.8ZM340.0 363.9L308.5 364.3L308.5 355.7L340.0 356.1ZM340.2 348.2L308.8 347.0L309.2 338.3L340.6 340.4ZM341.3 332.5L309.9 329.7L310.8 321.0L342.1 324.7ZM343.1 317.0L311.9 312.4L313.3 303.9L344.3 309.2ZM345.8 301.5L314.9 295.3L316.7 286.8L347.4 293.8ZM349.2 286.2L318.7 278.4L320.9 270.0L351.3 278.6ZM353.5 271.0L323.4 261.7L326.1 253.4L355.9 263.6ZM358.5 256.2L329.0 245.3L332.1 237.2L361.4 248.8ZM364.4 241.6L335.4 229.1L339.0 221.2L367.6 234.4ZM370.9 227.3L342.7 213.4L346.6 205.6L374.5 220.3ZM378.3 213.4L350.8 198.0L355.1 190.5L382.2 206.6ZM386.3 199.9L359.6 183.1L364.4 175.8L390.6 193.3ZM395.0 186.9L369.3 168.7L374.4 161.7L399.6 180.5ZM404.4 174.3L379.7 154.8L385.1 148.0L409.3 168.2ZM414.4 162.2L390.8 141.4L396.6 135.0L419.7 156.4ZM425.1 150.7L402.5 128.7L408.7 122.5L430.7 145.1ZM436.4 139.7L415.0 116.6L421.4 110.8L442.2 134.4ZM448.2 129.3L428.0 105.1L434.8 99.7L454.3 124.4ZM460.5 119.6L441.7 94.4L448.7 89.3L466.9 115.0ZM473.3 110.6L455.8 84.4L463.1 79.6L479.9 106.3ZM486.6 102.2L470.5 75.1L478.0 70.8L493.4 98.3ZM500.3 94.5L485.6 66.6L493.4 62.7L507.3 90.9ZM514.4 87.6L501.2 59.0L509.1 55.4L521.6 84.4ZM528.8 81.4L517.2 52.1L525.3 49.0L536.2 78.5ZM543.6 75.9L533.4 46.1L541.7 43.4L551.0 73.5ZM558.6 71.3L550.0 40.9L558.4 38.7L566.2 69.2ZM573.8 67.4L566.8 36.7L575.3 34.9L581.5 65.8ZM589.2 64.3L583.9 33.3L592.4 31.9L597.0 63.1ZM604.7 62.1L601.0 30.8L609.7 29.9L612.5 61.3ZM620.4 60.6L618.3 29.2L627.0 28.8L628.2 60.2ZM636.1 60.0L635.7 28.5L644.3 28.5L643.9 60.0ZM651.8 60.2L653.0 28.8L661.7 29.2L659.6 60.6ZM667.5 61.3L670.3 29.9L679.0 30.8L675.3 62.1ZM683.0 63.1L687.6 31.9L696.1 33.3L690.8 64.3ZM698.5 65.8L704.7 34.9L713.2 36.7L706.2 67.4ZM713.8 69.2L721.6 38.7L730.0 40.9L721.4 71.3ZM729.0 73.5L738.3 43.4L746.6 46.1L736.4 75.9ZM743.8 78.5L754.7 49.0L762.8 52.1L751.2 81.4ZM758.4 84.4L770.9 55.4L778.8 59.0L765.6 87.6ZM772.7 90.9L786.6 62.7L794.4 66.6L779.7 94.5ZM786.6 98.3L802.0 70.8L809.5 75.1L793.4 102.2ZM800.1 106.3L816.9 79.6L824.2 84.4L806.7 110.6ZM813.1 115.0L831.3 89.3L838.3 94.4L819.5 119.6ZM825.7 124.4L845.2 99.7L852.0 105.1L831.8 129.3ZM837.8 134.4L858.6 110.8L865.0 116.6L843.6 139.7ZM849.3 145.1L871.3 122.5L877.5 128.7L854.9 150.7ZM860.3 156.4L883.4 135.0L889.2 141.4L865.6 162.2ZM870.7 168.2L894.9 148.0L900.3 154.8L875.6 174.3ZM880.4 180.5L905.6 161.7L910.7 168.7L885.0 186.9ZM889.4 193.3L915.6 175.8L920.4 183.1L893.7 199.9ZM897.8 206.6L924.9 190.5L929.2 198.0L901.7 213.4ZM905.5 220.3L933.4 205.6L937.3 213.4L909.1 227.3ZM912.4 234.4L941.0 221.2L944.6 229.1L915.6 241.6ZM918.6 248.8L947.9 237.2L951.0 245.3L921.5 256.2ZM924.1 263.6L953.9 253.4L956.6 261.7L926.5 271.0ZM928.7 278.6L959.1 270.0L961.3 278.4L930.8 286.2ZM932.6 293.8L963.3 286.8L965.1 295.3L934.2 301.5ZM935.7 309.2L966.7 303.9L968.1 312.4L936.9 317.0ZM937.9 324.7L969.2 321.0L970.1 329.7L938.7 332.5ZM939.4 340.4L970.8 338.3L971.2 347.0L939.8 348.2Z" fill="#FFFFFF" opacity="0.3"/></g><g class="gear" style="--dur:110s; --spin:-442deg; transform-origin:560px -60px"><path d="M790.0 -63.9L814.1 -64.3L814.1 -55.7L790.0 -56.1ZM789.7 -48.2L813.8 -47.0L813.2 -38.3L789.2 -40.4ZM788.4 -32.6L812.3 -29.7L811.2 -21.1L787.3 -24.8ZM786.0 -17.1L809.7 -12.5L807.9 -4.1L784.4 -9.4ZM782.5 -1.7L805.9 4.4L803.5 12.7L780.4 5.8ZM778.0 13.3L800.9 21.0L798.0 29.2L775.4 20.7ZM772.5 28.0L794.8 37.3L791.3 45.2L769.4 35.2ZM766.0 42.3L787.6 53.1L783.6 60.8L762.4 49.3ZM758.5 56.1L779.4 68.3L774.9 75.7L754.4 62.8ZM750.1 69.4L770.1 83.0L765.1 90.1L745.6 75.8ZM740.9 82.1L759.9 97.0L754.4 103.7L735.9 88.2ZM730.7 94.1L748.7 110.3L742.8 116.6L725.4 99.8ZM719.8 105.4L736.6 122.8L730.3 128.7L714.1 110.7ZM708.2 115.9L723.7 134.4L717.0 139.9L702.1 120.9ZM695.8 125.6L710.1 145.1L703.0 150.1L689.4 130.1ZM682.8 134.4L695.7 154.9L688.3 159.4L676.1 138.5ZM669.3 142.4L680.8 163.6L673.1 167.6L662.3 146.0ZM655.2 149.4L665.2 171.3L657.3 174.8L648.0 152.5ZM640.7 155.4L649.2 178.0L641.0 180.9L633.3 158.0ZM625.8 160.4L632.7 183.5L624.4 185.9L618.3 162.5ZM610.6 164.4L615.9 187.9L607.5 189.7L602.9 166.0ZM595.2 167.3L598.9 191.2L590.3 192.3L587.4 168.4ZM579.6 169.2L581.7 193.2L573.0 193.8L571.8 169.7ZM563.9 170.0L564.3 194.1L555.7 194.1L556.1 170.0ZM548.2 169.7L547.0 193.8L538.3 193.2L540.4 169.2ZM532.6 168.4L529.7 192.3L521.1 191.2L524.8 167.3ZM517.1 166.0L512.5 189.7L504.1 187.9L509.4 164.4ZM501.7 162.5L495.6 185.9L487.3 183.5L494.2 160.4ZM486.7 158.0L479.0 180.9L470.8 178.0L479.3 155.4ZM472.0 152.5L462.7 174.8L454.8 171.3L464.8 149.4ZM457.7 146.0L446.9 167.6L439.2 163.6L450.7 142.4ZM443.9 138.5L431.7 159.4L424.3 154.9L437.2 134.4ZM430.6 130.1L417.0 150.1L409.9 145.1L424.2 125.6ZM417.9 120.9L403.0 139.9L396.3 134.4L411.8 115.9ZM405.9 110.7L389.7 128.7L383.4 122.8L400.2 105.4ZM394.6 99.8L377.2 116.6L371.3 110.3L389.3 94.1ZM384.1 88.2L365.6 103.7L360.1 97.0L379.1 82.1ZM374.4 75.8L354.9 90.1L349.9 83.0L369.9 69.4ZM365.6 62.8L345.1 75.7L340.6 68.3L361.5 56.1ZM357.6 49.3L336.4 60.8L332.4 53.1L354.0 42.3ZM350.6 35.2L328.7 45.2L325.2 37.3L347.5 28.0ZM344.6 20.7L322.0 29.2L319.1 21.0L342.0 13.3ZM339.6 5.8L316.5 12.7L314.1 4.4L337.5 -1.7ZM335.6 -9.4L312.1 -4.1L310.3 -12.5L334.0 -17.1ZM332.7 -24.8L308.8 -21.1L307.7 -29.7L331.6 -32.6ZM330.8 -40.4L306.8 -38.3L306.2 -47.0L330.3 -48.2ZM330.0 -56.1L305.9 -55.7L305.9 -64.3L330.0 -63.9ZM330.3 -71.8L306.2 -73.0L306.8 -81.7L330.8 -79.6ZM331.6 -87.4L307.7 -90.3L308.8 -98.9L332.7 -95.2ZM334.0 -102.9L310.3 -107.5L312.1 -115.9L335.6 -110.6ZM337.5 -118.3L314.1 -124.4L316.5 -132.7L339.6 -125.8ZM342.0 -133.3L319.1 -141.0L322.0 -149.2L344.6 -140.7ZM347.5 -148.0L325.2 -157.3L328.7 -165.2L350.6 -155.2ZM354.0 -162.3L332.4 -173.1L336.4 -180.8L357.6 -169.3ZM361.5 -176.1L340.6 -188.3L345.1 -195.7L365.6 -182.8ZM369.9 -189.4L349.9 -203.0L354.9 -210.1L374.4 -195.8ZM379.1 -202.1L360.1 -217.0L365.6 -223.7L384.1 -208.2ZM389.3 -214.1L371.3 -230.3L377.2 -236.6L394.6 -219.8ZM400.2 -225.4L383.4 -242.8L389.7 -248.7L405.9 -230.7ZM411.8 -235.9L396.3 -254.4L403.0 -259.9L417.9 -240.9ZM424.2 -245.6L409.9 -265.1L417.0 -270.1L430.6 -250.1ZM437.2 -254.4L424.3 -274.9L431.7 -279.4L443.9 -258.5ZM450.7 -262.4L439.2 -283.6L446.9 -287.6L457.7 -266.0ZM464.8 -269.4L454.8 -291.3L462.7 -294.8L472.0 -272.5ZM479.3 -275.4L470.8 -298.0L479.0 -300.9L486.7 -278.0ZM494.2 -280.4L487.3 -303.5L495.6 -305.9L501.7 -282.5ZM509.4 -284.4L504.1 -307.9L512.5 -309.7L517.1 -286.0ZM524.8 -287.3L521.1 -311.2L529.7 -312.3L532.6 -288.4ZM540.4 -289.2L538.3 -313.2L547.0 -313.8L548.2 -289.7ZM556.1 -290.0L555.7 -314.1L564.3 -314.1L563.9 -290.0ZM571.8 -289.7L573.0 -313.8L581.7 -313.2L579.6 -289.2ZM587.4 -288.4L590.3 -312.3L598.9 -311.2L595.2 -287.3ZM602.9 -286.0L607.5 -309.7L615.9 -307.9L610.6 -284.4ZM618.3 -282.5L624.4 -305.9L632.7 -303.5L625.8 -280.4ZM633.3 -278.0L641.0 -300.9L649.2 -298.0L640.7 -275.4ZM648.0 -272.5L657.3 -294.8L665.2 -291.3L655.2 -269.4ZM662.3 -266.0L673.1 -287.6L680.8 -283.6L669.3 -262.4ZM676.1 -258.5L688.3 -279.4L695.7 -274.9L682.8 -254.4ZM689.4 -250.1L703.0 -270.1L710.1 -265.1L695.8 -245.6ZM702.1 -240.9L717.0 -259.9L723.7 -254.4L708.2 -235.9ZM714.1 -230.7L730.3 -248.7L736.6 -242.8L719.8 -225.4ZM725.4 -219.8L742.8 -236.6L748.7 -230.3L730.7 -214.1ZM735.9 -208.2L754.4 -223.7L759.9 -217.0L740.9 -202.1ZM745.6 -195.8L765.1 -210.1L770.1 -203.0L750.1 -189.4ZM754.4 -182.8L774.9 -195.7L779.4 -188.3L758.5 -176.1ZM762.4 -169.3L783.6 -180.8L787.6 -173.1L766.0 -162.3ZM769.4 -155.2L791.3 -165.2L794.8 -157.3L772.5 -148.0ZM775.4 -140.7L798.0 -149.2L800.9 -141.0L778.0 -133.3ZM780.4 -125.8L803.5 -132.7L805.9 -124.4L782.5 -118.3ZM784.4 -110.6L807.9 -115.9L809.7 -107.5L786.0 -102.9ZM787.3 -95.2L811.2 -98.9L812.3 -90.3L788.4 -87.4ZM789.2 -79.6L813.2 -81.7L813.8 -73.0L789.7 -71.8Z" fill="#1C1C1C" opacity="0.1"/></g></svg>
-
+  <header class="plate">
+    <svg viewBox="0 0 520 300" preserveAspectRatio="xMaxYMid meet" aria-hidden="true"><g class="gear" style="--spin:60deg; --dur:150s; transform-origin:850.0px 150.0px"><path d="M1210.0 144.1L1235.9 143.7L1235.9 156.3L1210.0 155.9ZM1209.6 167.7L1235.5 168.9L1234.7 181.5L1208.8 179.4ZM1207.6 191.1L1233.5 194.1L1231.8 206.6L1206.1 202.8ZM1204.2 214.4L1229.8 219.1L1227.3 231.5L1201.9 226.0ZM1199.2 237.5L1224.4 243.8L1221.2 256.0L1196.2 248.9ZM1192.7 260.1L1217.5 268.1L1213.4 280.0L1189.0 271.3ZM1184.8 282.3L1209.0 291.9L1204.2 303.5L1180.3 293.2ZM1175.4 303.9L1198.9 315.0L1193.4 326.4L1170.2 314.5ZM1164.7 324.9L1187.4 337.5L1181.1 348.4L1158.8 335.1ZM1152.6 345.1L1174.4 359.2L1167.4 369.7L1146.0 354.9ZM1139.2 364.5L1160.0 379.9L1152.3 390.0L1132.0 373.8ZM1124.5 382.9L1144.3 399.7L1136.0 409.2L1116.7 391.8ZM1108.7 400.4L1127.4 418.4L1118.4 427.4L1100.4 408.7ZM1091.8 416.7L1109.2 436.0L1099.7 444.3L1082.9 424.5ZM1073.8 432.0L1090.0 452.3L1079.9 460.0L1064.5 439.2ZM1054.9 446.0L1069.7 467.4L1059.2 474.4L1045.1 452.6ZM1035.1 458.8L1048.4 481.1L1037.5 487.4L1024.9 464.7ZM1014.5 470.2L1026.4 493.4L1015.0 498.9L1003.9 475.4ZM993.2 480.3L1003.5 504.2L991.9 509.0L982.3 484.8ZM971.3 489.0L980.0 513.4L968.1 517.5L960.1 492.7ZM948.9 496.2L956.0 521.2L943.8 524.4L937.5 499.2ZM926.0 501.9L931.5 527.3L919.1 529.8L914.4 504.2ZM902.8 506.1L906.6 531.8L894.1 533.5L891.1 507.6ZM879.4 508.8L881.5 534.7L868.9 535.5L867.7 509.6ZM855.9 510.0L856.3 535.9L843.7 535.9L844.1 510.0ZM832.3 509.6L831.1 535.5L818.5 534.7L820.6 508.8ZM808.9 507.6L805.9 533.5L793.4 531.8L797.2 506.1ZM785.6 504.2L780.9 529.8L768.5 527.3L774.0 501.9ZM762.5 499.2L756.2 524.4L744.0 521.2L751.1 496.2ZM739.9 492.7L731.9 517.5L720.0 513.4L728.7 489.0ZM717.7 484.8L708.1 509.0L696.5 504.2L706.8 480.3ZM696.1 475.4L685.0 498.9L673.6 493.4L685.5 470.2ZM675.1 464.7L662.5 487.4L651.6 481.1L664.9 458.8ZM654.9 452.6L640.8 474.4L630.3 467.4L645.1 446.0ZM635.5 439.2L620.1 460.0L610.0 452.3L626.2 432.0ZM617.1 424.5L600.3 444.3L590.8 436.0L608.2 416.7ZM599.6 408.7L581.6 427.4L572.6 418.4L591.3 400.4ZM583.3 391.8L564.0 409.2L555.7 399.7L575.5 382.9ZM568.0 373.8L547.7 390.0L540.0 379.9L560.8 364.5ZM554.0 354.9L532.6 369.7L525.6 359.2L547.4 345.1ZM541.2 335.1L518.9 348.4L512.6 337.5L535.3 324.9ZM529.8 314.5L506.6 326.4L501.1 315.0L524.6 303.9ZM519.7 293.2L495.8 303.5L491.0 291.9L515.2 282.3ZM511.0 271.3L486.6 280.0L482.5 268.1L507.3 260.1ZM503.8 248.9L478.8 256.0L475.6 243.8L500.8 237.5ZM498.1 226.0L472.7 231.5L470.2 219.1L495.8 214.4ZM493.9 202.8L468.2 206.6L466.5 194.1L492.4 191.1ZM491.2 179.4L465.3 181.5L464.5 168.9L490.4 167.7ZM490.0 155.9L464.1 156.3L464.1 143.7L490.0 144.1ZM490.4 132.3L464.5 131.1L465.3 118.5L491.2 120.6ZM492.4 108.9L466.5 105.9L468.2 93.4L493.9 97.2ZM495.8 85.6L470.2 80.9L472.7 68.5L498.1 74.0ZM500.8 62.5L475.6 56.2L478.8 44.0L503.8 51.1ZM507.3 39.9L482.5 31.9L486.6 20.0L511.0 28.7ZM515.2 17.7L491.0 8.1L495.8 -3.5L519.7 6.8ZM524.6 -3.9L501.1 -15.0L506.6 -26.4L529.8 -14.5ZM535.3 -24.9L512.6 -37.5L518.9 -48.4L541.2 -35.1ZM547.4 -45.1L525.6 -59.2L532.6 -69.7L554.0 -54.9ZM560.8 -64.5L540.0 -79.9L547.7 -90.0L568.0 -73.8ZM575.5 -82.9L555.7 -99.7L564.0 -109.2L583.3 -91.8ZM591.3 -100.4L572.6 -118.4L581.6 -127.4L599.6 -108.7ZM608.2 -116.7L590.8 -136.0L600.3 -144.3L617.1 -124.5ZM626.2 -132.0L610.0 -152.3L620.1 -160.0L635.5 -139.2ZM645.1 -146.0L630.3 -167.4L640.8 -174.4L654.9 -152.6ZM664.9 -158.8L651.6 -181.1L662.5 -187.4L675.1 -164.7ZM685.5 -170.2L673.6 -193.4L685.0 -198.9L696.1 -175.4ZM706.8 -180.3L696.5 -204.2L708.1 -209.0L717.7 -184.8ZM728.7 -189.0L720.0 -213.4L731.9 -217.5L739.9 -192.7ZM751.1 -196.2L744.0 -221.2L756.2 -224.4L762.5 -199.2ZM774.0 -201.9L768.5 -227.3L780.9 -229.8L785.6 -204.2ZM797.2 -206.1L793.4 -231.8L805.9 -233.5L808.9 -207.6ZM820.6 -208.8L818.5 -234.7L831.1 -235.5L832.3 -209.6ZM844.1 -210.0L843.7 -235.9L856.3 -235.9L855.9 -210.0ZM867.7 -209.6L868.9 -235.5L881.5 -234.7L879.4 -208.8ZM891.1 -207.6L894.1 -233.5L906.6 -231.8L902.8 -206.1ZM914.4 -204.2L919.1 -229.8L931.5 -227.3L926.0 -201.9ZM937.5 -199.2L943.8 -224.4L956.0 -221.2L948.9 -196.2ZM960.1 -192.7L968.1 -217.5L980.0 -213.4L971.3 -189.0ZM982.3 -184.8L991.9 -209.0L1003.5 -204.2L993.2 -180.3ZM1003.9 -175.4L1015.0 -198.9L1026.4 -193.4L1014.5 -170.2ZM1024.9 -164.7L1037.5 -187.4L1048.4 -181.1L1035.1 -158.8ZM1045.1 -152.6L1059.2 -174.4L1069.7 -167.4L1054.9 -146.0ZM1064.5 -139.2L1079.9 -160.0L1090.0 -152.3L1073.8 -132.0ZM1082.9 -124.5L1099.7 -144.3L1109.2 -136.0L1091.8 -116.7ZM1100.4 -108.7L1118.4 -127.4L1127.4 -118.4L1108.7 -100.4ZM1116.7 -91.8L1136.0 -109.2L1144.3 -99.7L1124.5 -82.9ZM1132.0 -73.8L1152.3 -90.0L1160.0 -79.9L1139.2 -64.5ZM1146.0 -54.9L1167.4 -69.7L1174.4 -59.2L1152.6 -45.1ZM1158.8 -35.1L1181.1 -48.4L1187.4 -37.5L1164.7 -24.9ZM1170.2 -14.5L1193.4 -26.4L1198.9 -15.0L1175.4 -3.9ZM1180.3 6.8L1204.2 -3.5L1209.0 8.1L1184.8 17.7ZM1189.0 28.7L1213.4 20.0L1217.5 31.9L1192.7 39.9ZM1196.2 51.1L1221.2 44.0L1224.4 56.2L1199.2 62.5ZM1201.9 74.0L1227.3 68.5L1229.8 80.9L1204.2 85.6ZM1206.1 97.2L1231.8 93.4L1233.5 105.9L1207.6 108.9ZM1208.8 120.6L1234.7 118.5L1235.5 131.1L1209.6 132.3Z" fill="var(--paper)"/></g><g class="gear" style="--spin:-240deg; --dur:38s; transform-origin:400.0px 150.0px"><path d="M489.8 144.1L515.8 142.4L515.8 157.6L489.8 155.9ZM488.3 167.6L513.8 172.6L509.8 187.3L485.2 178.9ZM480.7 189.8L504.0 201.3L496.5 214.4L474.8 200.0ZM467.7 209.3L487.2 226.5L476.5 237.2L459.3 217.7ZM450.0 224.8L464.4 246.5L451.3 254.0L439.8 230.7ZM428.9 235.2L437.3 259.8L422.6 263.8L417.6 238.3ZM405.9 239.8L407.6 265.8L392.4 265.8L394.1 239.8ZM382.4 238.3L377.4 263.8L362.7 259.8L371.1 235.2ZM360.2 230.7L348.7 254.0L335.6 246.5L350.0 224.8ZM340.7 217.7L323.5 237.2L312.8 226.5L332.3 209.3ZM325.2 200.0L303.5 214.4L296.0 201.3L319.3 189.8ZM314.8 178.9L290.2 187.3L286.2 172.6L311.7 167.6ZM310.2 155.9L284.2 157.6L284.2 142.4L310.2 144.1ZM311.7 132.4L286.2 127.4L290.2 112.7L314.8 121.1ZM319.3 110.2L296.0 98.7L303.5 85.6L325.2 100.0ZM332.3 90.7L312.8 73.5L323.5 62.8L340.7 82.3ZM350.0 75.2L335.6 53.5L348.7 46.0L360.2 69.3ZM371.1 64.8L362.7 40.2L377.4 36.2L382.4 61.7ZM394.1 60.2L392.4 34.2L407.6 34.2L405.9 60.2ZM417.6 61.7L422.6 36.2L437.3 40.2L428.9 64.8ZM439.8 69.3L451.3 46.0L464.4 53.5L450.0 75.2ZM459.3 82.3L476.5 62.8L487.2 73.5L467.7 90.7ZM474.8 100.0L496.5 85.6L504.0 98.7L480.7 110.2ZM485.2 121.1L509.8 112.7L513.8 127.4L488.3 132.4Z" fill="var(--dark)"/></g></svg>
     <div class="col">
       <a class="back" href="https://gears.run">← All gears</a>
-      <p class="badge">The Gears System</p>
       <h1>Product</h1>
       <p class="lede">Product decides what gets built, and checks whether it was worth building.</p>
     </div>
-
   </header>
 
   <main class="col">
     <section>
       <h2>Takeaways</h2>
-      <ol class="takeaways">
-        <li>Product owns the question the other gears assume an answer to — whether to build the thing at all.</li>
-        <li>It is the only gear that runs as a train. Three sub-gears turn in order, each completing before the next begins.</li>
-        <li>Observe closes the loop. What shipped is measured against what was promised, and the result re-enters as new signal.</li>
+      <ol class="list">
+        <li><span class="label">One</span>Product owns the question the other gears assume an answer to — whether to build the thing at all.</li>
+        <li><span class="label">Two</span>It is the only gear that runs as a train. Three sub-gears turn in order, each completing before the next begins.</li>
+        <li><span class="label">Three</span>Observe closes the loop. What shipped is measured against what was promised, and the result re-enters as new signal.</li>
       </ol>
     </section>
 
     <section>
       <h2>The train</h2>
-      <ol class="stages">
-        <li><b>Intake</b><span>Captures every request, screens what is worth pursuing, and routes it to the gear that can act.</span></li>
-        <li><b>Manage</b><span>Coordinates the work across gears, at whatever depth it needs — some items take a brief, others the full chain to a specification.</span></li>
-        <li><b>Observe</b><span>Measures what shipped against what the brief promised, and feeds the result back to Intake as new signal.</span></li>
+      <ol class="list">
+        <li><span class="label">Intake</span>Captures every request, screens what is worth pursuing, and routes it to the gear that can act.</li>
+        <li><span class="label">Manage</span>Coordinates the work across gears, at whatever depth it needs — some items take a brief, others the full chain to a specification.</li>
+        <li><span class="label">Observe</span>Measures what shipped against what the brief promised, and feeds the result back to Intake as new signal.</li>
       </ol>
-    </section>
-
-    <section>
-      <h2>What it hands off</h2>
-      <p>A Product Brief opens discovery. User Stories go to Design and Development. A Research Intake Request opens a question. A specification is what engineering builds from. Each one is a legal input to another gear, which is what lets the gears run in any order rather than in a fixed line.</p>
+      <p style="margin-top:1.5rem">What comes out is a brief, user stories, a research request, a specification. Each one is a legal input to another gear, which is what lets the gears run in any order rather than in a fixed line.</p>
     </section>
 
     <section>
       <h2>Go deeper</h2>
-      <ul class="links">
+      <ul class="list links">
         <li><a href="https://product.gears.run/spec">Full specification</a><div class="meta">Contract, artifacts, gated procedure, handoff conditions.</div></li>
         <li><a href="https://product.gears.run/intake">Intake</a><div class="meta">The first sub-gear: capture, screen, route.</div></li>
         <li><a href="https://www.simplequality.co/p/the-product-gear-train">The Product Gear Train</a><div class="meta">The essay this gear is drawn from.</div></li>
