@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Product Gear — Gears</title>
-  <meta name="description" content="How intake becomes scoped, prioritized product work.">
+  <meta name="description" content="Product decides what gets built and why. Contract, gear train, artifacts, procedure, and handoffs.">
   <style>
     :root {
       --fg: #111;
@@ -12,9 +12,12 @@
       --accent: #0a3;
       --bg: #fafafa;
       --rule: #e5e5e5;
+      --instance: #8C4417;
+      --gap: #C81429;
     }
     * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     body {
       font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--fg);
@@ -31,12 +34,98 @@
       margin: 0 0 0.5rem;
     }
     h1 { font-size: 2.25rem; line-height: 1.1; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
-    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2.5rem; }
-    h2 { font-size: 1.125rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
-    p, ul { margin: 0 0 1rem; }
-    ul { padding-left: 1.25rem; }
+    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2rem; }
+    h2 { font-size: 1.125rem; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
+    h3 { font-size: 1rem; margin: 1.5rem 0 0.35rem; }
+    p, ul, ol { margin: 0 0 1rem; }
+    ul, ol { padding-left: 1.25rem; }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    code { font: 0.875em ui-monospace, "SF Mono", Menlo, monospace; }
+
+    /* Section index */
+    .toc { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.85rem 0; margin: 0 0 2rem; }
+    .toc ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.9rem; }
+
+    /* Contract — definition list, semantic on purpose */
+    dl.contract { margin: 0; }
+    dl.contract dt {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+    dl.contract dd { margin: 0.15rem 0 0; }
+
+    /* Gear train */
+    .train { list-style: none; padding: 0; margin: 0 0 1rem; counter-reset: subgear; }
+    .train > li {
+      border-left: 2px solid var(--rule);
+      padding: 0 0 1.25rem 1rem;
+      position: relative;
+    }
+    .train > li:last-child { padding-bottom: 0; }
+    .train .subgear { font-weight: 600; }
+    .train .phases { color: var(--muted); font-size: 0.9rem; margin: 0.25rem 0 0; }
+
+    /* Procedure steps with gates */
+    ol.steps { list-style: none; padding: 0; counter-reset: step; }
+    ol.steps > li {
+      counter-increment: step;
+      border-top: 1px solid var(--rule);
+      padding: 1rem 0;
+    }
+    ol.steps > li::before {
+      content: counter(step);
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 0.75rem;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+    .step-name { font-weight: 600; }
+    .field { margin: 0.5rem 0 0; font-size: 0.95rem; }
+    .field-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin: 0 0 1rem; }
+    th, td { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+    .table-scroll { overflow-x: auto; }
+
+    /* Layer markers */
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      vertical-align: 0.1em;
+    }
+    .badge-instance { color: var(--instance); }
+    .badge-gap { color: var(--gap); }
+    .instance-note {
+      border-left: 2px solid var(--instance);
+      padding-left: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .gap-note {
+      border-left: 2px solid var(--gap);
+      padding-left: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .note { border-left: 2px solid var(--rule); padding-left: 1rem; color: var(--muted); }
+
     footer {
       margin-top: 4rem;
       padding-top: 1.5rem;
@@ -48,7 +137,6 @@
       font-size: 0.9rem;
     }
     footer .gears-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .stub { color: var(--muted); font-style: italic; }
   </style>
 </head>
 <body>
@@ -56,28 +144,187 @@
     <header>
       <p class="eyebrow">The Gears System</p>
       <h1>The Product Gear</h1>
-      <p class="lead">How intake becomes scoped, prioritized product work.</p>
+      <p class="lead">Product decides what gets built and why, then checks whether it delivered.</p>
     </header>
 
+    <nav class="toc" aria-label="Sections">
+      <ul>
+        <li><a href="#contract">Contract</a></li>
+        <li><a href="#gear-train">Gear train</a></li>
+        <li><a href="#artifacts">Artifacts</a></li>
+        <li><a href="#procedure">Procedure</a></li>
+        <li><a href="#intake">Intake</a></li>
+        <li><a href="#handoffs">Handoffs</a></li>
+        <li><a href="#operators">Operators</a></li>
+        <li><a href="#templates">Templates</a></li>
+      </ul>
+    </nav>
+
     <main>
-      <section>
-        <h2>Purpose</h2>
-        <p>Product takes raw intake and shapes it into work that can be decided on. It owns scope, priority, and the question of "should we build this at all."</p>
+      <section id="contract">
+        <h2>Contract</h2>
+        <dl class="contract">
+          <dt>Purpose</dt>
+          <dd>Convert raw signal into scoped, prioritized, evidence-backed work, and observe whether the work that shipped delivered the value it claimed. Product owns scope, priority, and the question of whether to build at all.</dd>
+
+          <dt>Input</dt>
+          <dd>Raw signal from any source — feature requests, bug reports, partner asks, internal observation. Evidence from Research. Specifications from Design. Outcome data from shipped software.</dd>
+
+          <dt>Output</dt>
+          <dd>Product Brief, User Stories, UX Request, Research Intake Request, PRD. Each is a legal input to at least one other gear.</dd>
+        </dl>
       </section>
 
-      <section>
-        <h2>Input</h2>
-        <p>Raw signal — feature requests, bug reports, partner asks, internal observations — captured through Product's own <a href="https://product.gears.run/intake">intake process</a>.</p>
+      <section id="gear-train">
+        <h2>Gear train</h2>
+        <p>Product is the one gear that does not operate as a single workflow. It runs as a train of three sub-gears. Each completes its rotation before the next begins.</p>
+        <ol class="train">
+          <li>
+            <span class="subgear">Intake</span> — captures, screens, and routes ideas.
+            <p class="phases">Phases: Capture → Screen → Route. Documented at <a href="https://product.gears.run/intake">product.gears.run/intake</a>.</p>
+          </li>
+          <li>
+            <span class="subgear">Manage</span> — coordinates cross-functional work at variable depths.
+            <p class="phases">Depth varies with the work: some items need a brief only, others run the full artifact chain through validation and a PRD.</p>
+          </li>
+          <li>
+            <span class="subgear">Observe</span> — measures outcomes and confirms value was delivered.
+            <p class="phases">Observe closes the loop by feeding outcome data back in as new signal at Capture.</p>
+          </li>
+        </ol>
+        <p class="gap-note"><span class="badge badge-gap">Unsourced</span> Manage and Observe have no published procedure. The descriptions above are the full extent of what the source material defines. Their sub-pages are not yet written.</p>
       </section>
 
-      <section>
-        <h2>Output</h2>
-        <p>Prioritized, well-scoped product specs ready for Research, Design, or Development.</p>
+      <section id="artifacts">
+        <h2>Artifacts</h2>
+        <p>Each artifact plays one role. Artifacts reference each other rather than restating each other — recreating or summarizing an upstream artifact is what produces drift.</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Artifact</th><th>Role</th><th>Covers</th><th>Consumed by</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Product Brief</td><td>Kicks off discovery and aligns stakeholders</td><td>What and why</td><td>Product, Research</td></tr>
+              <tr><td>User Stories</td><td>Guides discovery work from the user's perspective</td><td>What</td><td>Design, Development</td></tr>
+              <tr><td>Research Intake Request</td><td>Opens a research question</td><td>What is unknown</td><td>Research</td></tr>
+              <tr><td>UX Request</td><td>Opens design work against validated scope</td><td>What to design</td><td>Design</td></tr>
+              <tr><td>PRD</td><td>Production-level specification</td><td>What and how, validated</td><td>Development</td></tr>
+              <tr><td>Sprint Plan</td><td>Commits executable work for one sprint</td><td>When</td><td>Development</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Flow: Product Brief → discovery → User Stories → validation → PRD → Sprint Plan.</p>
+
+        <h3>Citing evidence</h3>
+        <p>Any artifact that cites research uses Markdown footnote syntax <code>[^N]</code> in body prose, with definitions resolved at the end of the document. Research atom IDs live in the footnote definitions, never in body prose. Footnote IDs are scoped to the artifact — <code>[^1]</code> in a UX Request and <code>[^1]</code> in the Design Brief it produces are independent.</p>
       </section>
 
-      <section>
-        <h2>Instructions</h2>
-        <p class="stub">Coming soon.</p>
+      <section id="procedure">
+        <h2>Procedure</h2>
+        <p>Each step names its task, the result that counts as done, and what must be true before the work advances.</p>
+        <ol class="steps">
+          <li>
+            <span class="step-name">Capture</span>
+            <p class="field"><span class="field-label">Task</span> Record the signal in one canonical place, with enough structure to be screened.</p>
+            <p class="field"><span class="field-label">Expected result</span> A normalized intake item with source, description, and requester.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> The item is not a duplicate of an existing one.</p>
+          </li>
+          <li>
+            <span class="step-name">Screen</span>
+            <p class="field"><span class="field-label">Task</span> Decide whether the item enters the system at all.</p>
+            <p class="field"><span class="field-label">Expected result</span> Accepted, rejected, or deferred, with the reason recorded.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> An accept decision, and a stated problem the item addresses.</p>
+          </li>
+          <li>
+            <span class="step-name">Route</span>
+            <p class="field"><span class="field-label">Task</span> Send the accepted item to the gear that can act on it.</p>
+            <p class="field"><span class="field-label">Expected result</span> The item carries a destination gear and the artifact that will open work there — Research Intake Request, UX Request, or direct to Manage.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> The destination gear's intake procedure accepts the artifact.</p>
+          </li>
+          <li>
+            <span class="step-name">Brief</span>
+            <p class="field"><span class="field-label">Task</span> Write the Product Brief: problem, user need, success metrics, scope boundaries, stakeholders, and what still needs validating.</p>
+            <p class="field"><span class="field-label">Expected result</span> A Product Brief that states what and why, and names its open questions.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Stakeholder alignment on the problem and the success metrics.</p>
+          </li>
+          <li>
+            <span class="step-name">Discover</span>
+            <p class="field"><span class="field-label">Task</span> Turn the brief into User Stories with acceptance criteria. Open a Research Intake Request for anything the brief could not answer.</p>
+            <p class="field"><span class="field-label">Expected result</span> User Stories sufficient for Design and Development to explore against.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Every open question from the brief is either answered or explicitly deferred.</p>
+          </li>
+          <li>
+            <span class="step-name">Validate</span>
+            <p class="field"><span class="field-label">Task</span> Test the proposed solution against evidence from Research and specifications from Design.</p>
+            <p class="field"><span class="field-label">Expected result</span> A validated concept, with the evidence cited.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Success metrics are measurable and a baseline exists.</p>
+          </li>
+          <li>
+            <span class="step-name">Specify</span>
+            <p class="field"><span class="field-label">Task</span> Write the PRD: detailed requirements, validated designs and flows, technical considerations, edge cases, constraints.</p>
+            <p class="field"><span class="field-label">Expected result</span> A PRD an engineer can build from without asking what was meant.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Engineering has estimated effort against the validated design.</p>
+          </li>
+          <li>
+            <span class="step-name">Observe</span>
+            <p class="field"><span class="field-label">Task</span> Measure the shipped work against the success metrics named in the brief.</p>
+            <p class="field"><span class="field-label">Expected result</span> A result per metric — met, missed, or still pending measurement — with evidence.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> None. Observe emits new signal into Capture.</p>
+          </li>
+        </ol>
+        <p class="gap-note"><span class="badge badge-gap">Draft</span> Steps 1–3 follow the published Intake phases. Steps 4–8 are reconstructed from the artifact flow, not from a published Manage or Observe procedure. Confirm before treating them as specification.</p>
+      </section>
+
+      <section id="intake">
+        <h2>Intake</h2>
+        <p>Every gear has an intake procedure — the front door through which work enters it. Product is the only gear whose intake procedure is formalized as a sub-gear, with its own phases and its own page.</p>
+        <p>Product's intake procedure is the <a href="#gear-train">Intake sub-gear</a>, documented at <a href="https://product.gears.run/intake">product.gears.run/intake</a>.</p>
+        <p class="note">Intake, capitalized, means Product's sub-gear. An intake procedure, lowercase, is the thing every gear has. Research, Design, and Development each have one; none is a sub-gear.</p>
+      </section>
+
+      <section id="handoffs">
+        <h2>Handoffs</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Direction</th><th>Artifact</th><th>Ready when</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Product → Research</td><td>Research Intake Request</td><td>The question is stated, and the decision it will inform is named.</td></tr>
+              <tr><td>Product → Design</td><td>UX Request, plus the Product Brief</td><td>Scope boundaries are set and success metrics are measurable.</td></tr>
+              <tr><td>Product → Development</td><td>PRD, plus Sprint Plan</td><td>Designs are validated and effort is estimated.</td></tr>
+              <tr><td>Research → Product</td><td>Research findings, cited by atom ID</td><td>Findings answer a question the brief raised.</td></tr>
+              <tr><td>Design → Product</td><td>Design specifications</td><td>Specifications are concrete enough to estimate against.</td></tr>
+              <tr><td>Development → Product</td><td>Shipped software and outcome data</td><td>The metric named in the brief can be measured.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Because the gears are non-linear, a handoff is legal whenever its readiness condition holds. Nothing requires the gears to run in order.</p>
+      </section>
+
+      <section id="operators">
+        <h2>Operators</h2>
+        <p>Product runs with a human owning scope and priority decisions, and agents producing first drafts of artifacts. The screen decision, the scope boundary, and the prioritization are human calls. Draft generation, evidence assembly, and consistency checking are agent work.</p>
+        <p class="instance-note"><span class="badge badge-instance">Instance</span> In the khaos-studio implementation, PRD generation runs through GitHub Actions triggered on request approval, with structured YAML prompt templates and persona matching. That automation is one way to run this gear, not part of the framework.</p>
+      </section>
+
+      <section id="templates">
+        <h2>Templates</h2>
+        <p>Templates fix the shape of each artifact. Skills execute the gear — they are how Product moves to a new organization without carrying the original repository with it.</p>
+        <h3>Templates</h3>
+        <ul>
+          <li><code>product-brief.md</code> — Product Brief</li>
+          <li><code>user-stories.md</code> — User Stories</li>
+          <li><code>product-requirements.yaml</code> — PRD</li>
+          <li><code>ux-request.yaml</code> — UX Request</li>
+          <li><code>research-intake-request.yaml</code> — Research Intake Request</li>
+        </ul>
+        <h3>Skills</h3>
+        <ul>
+          <li><code>prd-v1-generator</code> — drafts a PRD from an approved request</li>
+          <li><code>user-scenario-generator</code> — drafts user scenarios from a brief</li>
+        </ul>
+        <p class="instance-note"><span class="badge badge-instance">Instance</span> Both templates and skills currently live in the khaos-studio Product repository. Portable copies are not yet published here.</p>
       </section>
     </main>
 
