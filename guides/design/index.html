@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Design Gear — Gears</title>
-  <meta name="description" content="How product scope and research evidence become buildable specifications.">
+  <meta name="description" content="Design turns product scope and research evidence into buildable specifications. Contract, tenets, artifacts, sprint procedure, and handoffs.">
   <style>
     :root {
       --fg: #111;
@@ -12,9 +12,12 @@
       --accent: #0a3;
       --bg: #fafafa;
       --rule: #e5e5e5;
+      --instance: #8C4417;
+      --gap: #C81429;
     }
     * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
     body {
       font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--fg);
@@ -31,12 +34,96 @@
       margin: 0 0 0.5rem;
     }
     h1 { font-size: 2.25rem; line-height: 1.1; margin: 0 0 0.75rem; letter-spacing: -0.02em; }
-    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2.5rem; }
-    h2 { font-size: 1.125rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
-    p, ul { margin: 0 0 1rem; }
-    ul { padding-left: 1.25rem; }
+    .lead { font-size: 1.125rem; color: var(--muted); margin: 0 0 2rem; }
+    h2 { font-size: 1.125rem; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
+    h3 { font-size: 1rem; margin: 1.5rem 0 0.35rem; }
+    p, ul, ol { margin: 0 0 1rem; }
+    ul, ol { padding-left: 1.25rem; }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    code { font: 0.875em ui-monospace, "SF Mono", Menlo, monospace; }
+
+    .toc { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.85rem 0; margin: 0 0 2rem; }
+    .toc ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.9rem; }
+
+    dl.contract { margin: 0; }
+    dl.contract dt {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+    dl.contract dd { margin: 0.15rem 0 0; }
+
+    /* Tenets — ordered, priority is meaningful */
+    ol.tenets { list-style: none; padding: 0; counter-reset: tenet; }
+    ol.tenets > li {
+      counter-increment: tenet;
+      border-top: 1px solid var(--rule);
+      padding: 0.75rem 0;
+    }
+    ol.tenets > li::before {
+      content: counter(tenet);
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 0.75rem;
+      display: block;
+    }
+    .tenet-name { font-weight: 600; }
+    .tenet-test { color: var(--muted); font-size: 0.95rem; margin: 0.15rem 0 0; }
+
+    ol.steps { list-style: none; padding: 0; counter-reset: step; }
+    ol.steps > li {
+      counter-increment: step;
+      border-top: 1px solid var(--rule);
+      padding: 1rem 0;
+    }
+    ol.steps > li::before {
+      content: counter(step);
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 0.75rem;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+    .step-name { font-weight: 600; }
+    .field { margin: 0.5rem 0 0; font-size: 0.95rem; }
+    .field-label {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: block;
+    }
+
+    /* Nested sprint phases inside a stage */
+    .phases-inner { margin: 0.85rem 0 0; padding: 0.85rem 0 0 1rem; border-left: 2px solid var(--rule); }
+    .phases-inner ol { list-style: decimal; padding-left: 1.25rem; margin: 0.5rem 0 0; font-size: 0.95rem; }
+    .phases-inner li { margin-bottom: 0.35rem; }
+    .fidelity { color: var(--muted); }
+
+    table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin: 0 0 1rem; }
+    th, td { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+    th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+    .table-scroll { overflow-x: auto; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      vertical-align: 0.1em;
+    }
+    .badge-instance { color: var(--instance); }
+    .badge-gap { color: var(--gap); }
+    .instance-note { border-left: 2px solid var(--instance); padding-left: 1rem; color: var(--muted); font-size: 0.95rem; }
+    .gap-note { border-left: 2px solid var(--gap); padding-left: 1rem; color: var(--muted); font-size: 0.95rem; }
+    .note { border-left: 2px solid var(--rule); padding-left: 1rem; color: var(--muted); }
+
     footer {
       margin-top: 4rem;
       padding-top: 1.5rem;
@@ -48,7 +135,6 @@
       font-size: 0.9rem;
     }
     footer .gears-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .stub { color: var(--muted); font-style: italic; }
   </style>
 </head>
 <body>
@@ -56,28 +142,180 @@
     <header>
       <p class="eyebrow">The Gears System</p>
       <h1>The Design Gear</h1>
-      <p class="lead">How product scope and research evidence become buildable specifications.</p>
+      <p class="lead">Design turns product scope and research evidence into specifications concrete enough to build against.</p>
     </header>
 
+    <nav class="toc" aria-label="Sections">
+      <ul>
+        <li><a href="#contract">Contract</a></li>
+        <li><a href="#tenets">Tenets</a></li>
+        <li><a href="#artifacts">Artifacts</a></li>
+        <li><a href="#procedure">Procedure</a></li>
+        <li><a href="#intake">Intake</a></li>
+        <li><a href="#handoffs">Handoffs</a></li>
+        <li><a href="#operators">Operators</a></li>
+        <li><a href="#templates">Templates</a></li>
+      </ul>
+    </nav>
+
     <main>
-      <section>
-        <h2>Purpose</h2>
-        <p>Design takes scoped product work and research findings and produces specs concrete enough to build against — interaction, visual, system, and any other discipline the work requires.</p>
+      <section id="contract">
+        <h2>Contract</h2>
+        <dl class="contract">
+          <dt>Purpose</dt>
+          <dd>Translate scoped product work and research evidence into buildable specifications — interaction, visual, system, and any other discipline the work requires. Design owns how the thing works and what it looks like, and owns proving those choices before engineering commits to them.</dd>
+
+          <dt>Input</dt>
+          <dd>A UX Request and Product Brief from Product. Evidence from Research. Existing design system rules and prior sprint summaries.</dd>
+
+          <dt>Output</dt>
+          <dd>A Design Sprint Summary, a validated prototype, and a handoff package engineering can implement from. Design decisions are recorded with their rationale, the alternatives rejected, and how each held up under validation.</dd>
+        </dl>
       </section>
 
-      <section>
-        <h2>Input</h2>
-        <p>Product specs from the Product gear, evidence from the Research gear.</p>
+      <section id="tenets">
+        <h2>Tenets</h2>
+        <p>Design runs against a fixed, ordered list of tenets. Each is a decision criterion with a validation question attached. Order is meaningful — when two tenets conflict, the higher-priority one wins. A design that excels against one tenet but fails another needs refinement, not a tradeoff argument.</p>
+        <p>Defining this list is part of standing up the Design gear. The list below is one instance of it.</p>
+        <p class="instance-note"><span class="badge badge-instance">Instance</span> These six are khaos-studio's, written for professional film and television tooling. The practice transfers; these specific tenets do not.</p>
+        <ol class="tenets">
+          <li><span class="tenet-name">Establish customer trust</span><p class="tenet-test">Does this design choice build or maintain user trust?</p></li>
+          <li><span class="tenet-name">Keep everyone informed</span><p class="tenet-test">Does this maintain clear information flow between team members?</p></li>
+          <li><span class="tenet-name">Design for collaboration</span><p class="tenet-test">Does this enhance team collaboration?</p></li>
+          <li><span class="tenet-name">Support professionals</span><p class="tenet-test">Does this support professional work practices?</p></li>
+          <li><span class="tenet-name">Inform creative work</span><p class="tenet-test">Does this help users make informed creative decisions?</p></li>
+          <li><span class="tenet-name">Make it effortless</span><p class="tenet-test">Have we made this as effortless as possible?</p></li>
+        </ol>
       </section>
 
-      <section>
-        <h2>Output</h2>
-        <p>Buildable design specifications: flows, components, system rules, acceptance criteria.</p>
+      <section id="artifacts">
+        <h2>Artifacts</h2>
+        <p>Each artifact plays one role. Artifacts reference each other rather than restating each other — recreating or summarizing an upstream artifact is what produces drift.</p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Artifact</th><th>Role</th><th>Produced at</th><th>Consumed by</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Design Brief</td><td>States the problem, goals, and success criteria the sprint answers to</td><td>Stage 1</td><td>Design, Product</td></tr>
+              <tr><td>Design Sprint Plan</td><td>Sequences the sprint: what gets designed, in what order, and when each phase is done</td><td>Stage 2</td><td>Design</td></tr>
+              <tr><td>Brainstorm board</td><td>Frames the problem space and maps the customer journey</td><td>Stage 2–3</td><td>Design</td></tr>
+              <tr><td>Lo-Fi concepts</td><td>Explores structure and information architecture</td><td>Sprint phases 1–2</td><td>Design</td></tr>
+              <tr><td>Mid-Fi wireframes and prototype</td><td>Fixes interaction and journey flow</td><td>Sprint phases 3–4</td><td>Design, Research</td></tr>
+              <tr><td>Hi-Fi visual prototype</td><td>The testable, buildable representation</td><td>Sprint phase 5</td><td>Research, Development</td></tr>
+              <tr><td>Usability testing results</td><td>Evidence that the design works, or does not</td><td>Sprint phase 6</td><td>Design, Product</td></tr>
+              <tr><td>Design Sprint Summary</td><td>Closes the sprint: outcomes, decisions with rationale, journeys, open risks</td><td>Stage 5</td><td>Product, Development</td></tr>
+              <tr><td>Handoff package</td><td>Engineering-ready specification</td><td>Stage 6</td><td>Development</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Citing evidence</h3>
+        <p>Design artifacts that cite research use Markdown footnote syntax <code>[^N]</code> in body prose, with definitions resolved at the end of the document and research atom IDs living only in those definitions. Footnote IDs are scoped to the artifact.</p>
       </section>
 
-      <section>
-        <h2>Instructions</h2>
-        <p class="stub">Coming soon.</p>
+      <section id="procedure">
+        <h2>Procedure</h2>
+        <p>Design runs at two levels. The gear has six stages. Stage 4 expands into a six-phase sprint that moves from low to high fidelity.</p>
+        <ol class="steps">
+          <li>
+            <span class="step-name">Design request submission</span>
+            <p class="field"><span class="field-label">Task</span> Using the product specification as a foundation, open a design request covering overview, goals, details of the improvement, supporting research, expected impact, and timeline.</p>
+            <p class="field"><span class="field-label">Expected result</span> A complete design request.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> The request is approved, with clear objectives and success criteria.</p>
+          </li>
+          <li>
+            <span class="step-name">Generate sprint plan</span>
+            <p class="field"><span class="field-label">Task</span> Assign a designer, schedule the kickoff, and prepare a brainstorm surface framing the problem space, the tenets, foundational research, and an empty customer journey framework.</p>
+            <p class="field"><span class="field-label">Expected result</span> A sprint plan with confirmed team and timeline, and a prepared brainstorm board.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> The plan is recorded in the design backlog with assigned resources, and the board holds the research materials and empty frameworks.</p>
+          </li>
+          <li>
+            <span class="step-name">Sprint kickoff</span>
+            <p class="field"><span class="field-label">Task</span> Review the request and confirm objectives. Develop design prompts as How-Might-We statements. Brainstorm against goals and journey pain points, then synthesize: group concepts, name themes, map solutions to touchpoints, and select what proceeds to wireframing.</p>
+            <p class="field"><span class="field-label">Expected result</span> A documented customer journey with pain points, categorized concepts mapped to it, and a prioritized list for wireframing.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Team consensus on prioritized solutions, validated against the request's goals, user needs, technical feasibility, and journey pain points.</p>
+          </li>
+          <li>
+            <span class="step-name">Sprint execution</span>
+            <p class="field"><span class="field-label">Task</span> Run the six sprint phases, iterating on feedback at each fidelity level.</p>
+            <div class="phases-inner">
+              <span class="field-label">Sprint phases</span>
+              <ol>
+                <li>Brainstorm <span class="fidelity">(Lo-Fi)</span> — ideate, then synthesize into a curated set</li>
+                <li>Interface exploration <span class="fidelity">(Lo-Fi)</span> — competitor analysis, information architecture, first concepts</li>
+                <li>Interaction design <span class="fidelity">(Mid-Fi)</span> — digital wireframes communicating the architecture</li>
+                <li>Conceptual prototype <span class="fidelity">(Mid-Fi)</span> — usable prototype aligned to the customer journey</li>
+                <li>Visual prototype <span class="fidelity">(Hi-Fi)</span> — the testable, buildable representation</li>
+                <li>Remote research — usability testing against the prototype</li>
+              </ol>
+              <p class="field">Each phase declares its own hypothesis, goals, activities, expected artifacts, prerequisites to advance, and participants.</p>
+            </div>
+            <p class="field"><span class="field-label">Expected result</span> Completed iterations at each fidelity level, usability testing results, iteration documentation, and final design proposals.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Each fidelity level reviewed and approved, usability testing complete, technical feasibility confirmed, design system compliance verified.</p>
+          </li>
+          <li>
+            <span class="step-name">Sprint conclusion</span>
+            <p class="field"><span class="field-label">Task</span> Write the Design Sprint Summary and close the tracking record.</p>
+            <p class="field"><span class="field-label">Expected result</span> A summary capturing outcome against objective, key design decisions with rationale and rejected alternatives, research and learning, prototype overview, design system impact, customer journeys, open questions and risks, and cross-references.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> The summary is complete and stored where sprint summaries live.</p>
+          </li>
+          <li>
+            <span class="step-name">Handoff</span>
+            <p class="field"><span class="field-label">Task</span> Prepare the design handoff package for engineering.</p>
+            <p class="field"><span class="field-label">Expected result</span> Engineering-ready designs.</p>
+            <p class="field"><span class="field-label">Prerequisites to advance</span> Designs approved and technical feasibility confirmed.</p>
+          </li>
+        </ol>
+        <p class="instance-note"><span class="badge badge-instance">Instance</span> The source procedure names specific tools and locations — a FigJam board, a GitHub project view, a "Design Hub" repository, a Design Tracking issue. Those are stripped here. Substitute your own shared brainstorm surface, backlog, and system of record.</p>
+      </section>
+
+      <section id="intake">
+        <h2>Intake</h2>
+        <p>Design's intake procedure is stage 1: a design request opened against an approved product specification, carrying overview, goals, details, supporting research, expected impact, and timeline. It is accepted when objectives and success criteria are clear.</p>
+        <p class="note">Unlike Product, Design's intake procedure is not formalized as a sub-gear. It is a single gated stage.</p>
+        <p class="gap-note"><span class="badge badge-gap">Partial</span> Design's intake procedure has no published article. What appears above is extracted from the gear procedure, not from a dedicated source.</p>
+      </section>
+
+      <section id="handoffs">
+        <h2>Handoffs</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Direction</th><th>Artifact</th><th>Ready when</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Product → Design</td><td>UX Request, plus the Product Brief</td><td>Scope boundaries are set and success metrics are measurable.</td></tr>
+              <tr><td>Research → Design</td><td>Research findings, cited by atom ID</td><td>Findings bear on a decision the sprint has to make.</td></tr>
+              <tr><td>Design → Research</td><td>Mid-Fi or Hi-Fi prototype</td><td>The prototype is complete enough to test a stated hypothesis.</td></tr>
+              <tr><td>Design → Development</td><td>Handoff package, plus the Design Sprint Summary</td><td>Designs are approved and technical feasibility is confirmed.</td></tr>
+              <tr><td>Design → Product</td><td>Design Sprint Summary</td><td>Outcomes are stated against the objectives the brief set.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Because the gears are non-linear, a handoff is legal whenever its readiness condition holds. Design can hand a prototype to Research mid-sprint and take findings back without leaving the gear.</p>
+      </section>
+
+      <section id="operators">
+        <h2>Operators</h2>
+        <p>A sprint runs with a facilitator, a designer, and named participants from product, engineering, and any function the work touches. Judgment calls belong to people: which concepts proceed, whether a tenet is satisfied, whether the prototype represents the journey honestly. Agents draft the brief, sequence the plan, prepare the discovery board, run desk research, and write the summary.</p>
+      </section>
+
+      <section id="templates">
+        <h2>Templates</h2>
+        <p>Templates fix the shape of each artifact. Skills execute the gear — they are how Design moves to a new organization without carrying the original repository with it.</p>
+        <h3>Templates</h3>
+        <ul>
+          <li>Design Sprint Plan — sprint overview, scope, success criteria, milestones, then one block per phase</li>
+          <li>Design Sprint Summary — metadata, outcome against objective, key design decisions, research and learning, prototype overview, design system impact, customer journeys, open questions and risks, cross-references</li>
+        </ul>
+        <h3>Skills</h3>
+        <ul>
+          <li><code>design-brief</code> — turns a UX request into a structured brief</li>
+          <li><code>design-workshop-facilitator</code> — builds the discovery board for phase 1</li>
+          <li><code>design-plan</code> — turns a brief plus discovery into a milestone-gated sprint plan</li>
+          <li><code>design-report</code> — turns a completed sprint into the summary</li>
+        </ul>
+        <p class="instance-note"><span class="badge badge-instance">Instance</span> Templates and the <code>design-brief</code> skill currently live in the khaos-studio Design repository. Portable copies are not yet published here.</p>
       </section>
     </main>
 
