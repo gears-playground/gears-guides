@@ -10,19 +10,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* This page becomes any other gear by changing --gear and --ink together.
-       Only the type colour flips; the two gear tones stay fixed so the pair
-       always reads as two distinct gears.
-         Product      --gear #FD6F17   --ink var(--dark)
-         Research     --gear #F1273F   --ink var(--paper)
-         Design       --gear #7F27F1   --ink var(--paper)
-         Development  --gear #2735F1   --ink var(--paper)
+    /* Each gear page is monochromatic in its own colour family: the 500 is
+       the plate, the 100 is the type, the 900 is the ground, the 300 is the
+       meta. The 300 was chosen over the 400 because the 400 step swings from
+       light (orange) to dark (indigo) across families, so it does not read
+       as consistently dim. Only --ink flips, because the 900 reads on a light plate and the
+       100 reads on a dark one.
+         Product      orange  500 #FD6F17  100 #FFECE1  900 #2A190E  ink dark
+         Research     red     500 #F1273F  100 #FFE1E5  900 #2A0E11  ink light
+         Design       purple  500 #7F27F1  100 #EEE1FF  900 #1A0E2A  ink light
+         Development  indigo  500 #2735F1  100 #E1E3FF  900 #0E102A  ink light
 
-       Every length below comes from the scale. Nothing is bespoke.
-       Root is fluid (16px + 0.25vw, capped) and everything else is rem, so
-       one value drives the whole system — the method lawsofux.com uses.
-       Type is a perfect-fourth modular scale (1.333); the reference's
-       1.777 and 3.158 are steps 2 and 4 of that same scale. */
+       Every length below comes from the scale. Root is fluid
+       (16px + 0.25vw, capped) and everything else is rem, so one value
+       drives the whole system — the method lawsofux.com uses. Type is a
+       perfect-fourth modular scale (1.333); the reference's 1.777 and
+       3.158 are steps 2 and 4 of that same scale. */
     :root {
       font-size: clamp(1rem, 1rem + 0.25vw, 1.25rem);
 
@@ -41,11 +44,11 @@
       --container: 64rem;    /* measured from the reference */
       --hero: 30rem;         /* plate height */
 
-      --gear:  #F1273F;
-      --paper: #FFECE1;
-      --dark:  #1C1C1C;
-      --dim:   #A9A9A9;
-      --ink:   var(--paper);
+      --gear:  #F1273F;    /* red-500 — the plate */
+      --light: #FFE1E5;    /* red-100 — page text, and the driving gear */
+      --dark:  #2A0E11;    /* red-900 — page ground, and the driven gear */
+      --dim:   #FF808E;    /* red-300 — meta and hairlines */
+      --ink:   var(--light);/* type on the plate — the half that flips */
 
       --display: "Host Grotesk", system-ui, sans-serif;
       --body: "Inter", system-ui, sans-serif;
@@ -54,7 +57,7 @@
     body {
       margin: 0;
       background: var(--dark);
-      color: var(--paper);
+      color: var(--light);
       font: 400 var(--t-body)/1.4 var(--body);
     }
     :focus-visible { outline: 1px solid var(--gear); outline-offset: var(--s-1); }
@@ -128,18 +131,18 @@
     .list li:last-child { border-bottom: 1px solid var(--dim); }
     .list .label { margin-bottom: var(--s-2); }
     .links a { font: 600 var(--t-body)/1.4 var(--display); color: inherit; text-decoration: none; border-bottom: 1px solid var(--dim); }
-    .links a:hover { border-bottom-color: var(--paper); }
+    .links a:hover { border-bottom-color: var(--light); }
     .links .meta { margin-top: var(--s-1); color: var(--dim); }
     footer { padding-top: var(--s-5); border-top: 1px solid var(--dim); }
     footer nav { display: flex; flex-wrap: wrap; gap: var(--s-4); }
     footer a { text-decoration: none; color: var(--dim); }
-    footer a:hover { color: var(--paper); }
+    footer a:hover { color: var(--light); }
   </style>
 </head>
 <body>
 
   <header class="plate">
-    <svg viewBox="0 0 600 600" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g class="gear" style="--spin:60deg; --dur:120s; transform-origin:619.0px 300.0px"><path d="M878.9 291.5L917.8 290.2L917.8 309.8L878.9 308.5ZM877.7 325.5L916.6 329.3L914.0 348.7L875.5 342.4ZM872.2 359.0L910.2 367.9L905.1 386.8L867.8 375.5ZM862.3 391.6L898.8 405.3L891.3 423.4L855.8 407.3ZM848.3 422.6L882.7 440.9L872.9 457.9L839.8 437.3ZM830.3 451.4L862.0 474.2L850.1 489.7L820.0 464.9ZM808.8 477.7L837.2 504.4L823.4 518.2L796.7 489.8ZM783.9 501.0L808.7 531.1L793.2 543.0L770.4 511.3ZM756.3 520.8L776.9 553.9L759.9 563.7L741.6 529.3ZM726.3 536.8L742.4 572.3L724.3 579.8L710.6 543.3ZM694.5 548.8L705.8 586.1L686.9 591.2L678.0 553.2ZM661.4 556.5L667.7 595.0L648.3 597.6L644.5 558.7ZM627.5 559.9L628.8 598.8L609.2 598.8L610.5 559.9ZM593.5 558.7L589.7 597.6L570.3 595.0L576.6 556.5ZM560.0 553.2L551.1 591.2L532.2 586.1L543.5 548.8ZM527.4 543.3L513.7 579.8L495.6 572.3L511.7 536.8ZM496.4 529.3L478.1 563.7L461.1 553.9L481.7 520.8ZM467.6 511.3L444.8 543.0L429.3 531.1L454.1 501.0ZM441.3 489.8L414.6 518.2L400.8 504.4L429.2 477.7ZM418.0 464.9L387.9 489.7L376.0 474.2L407.7 451.4ZM398.2 437.3L365.1 457.9L355.3 440.9L389.7 422.6ZM382.2 407.3L346.7 423.4L339.2 405.3L375.7 391.6ZM370.2 375.5L332.9 386.8L327.8 367.9L365.8 359.0ZM362.5 342.4L324.0 348.7L321.4 329.3L360.3 325.5ZM359.1 308.5L320.2 309.8L320.2 290.2L359.1 291.5ZM360.3 274.5L321.4 270.7L324.0 251.3L362.5 257.6ZM365.8 241.0L327.8 232.1L332.9 213.2L370.2 224.5ZM375.7 208.4L339.2 194.7L346.7 176.6L382.2 192.7ZM389.7 177.4L355.3 159.1L365.1 142.1L398.2 162.7ZM407.7 148.6L376.0 125.8L387.9 110.3L418.0 135.1ZM429.2 122.3L400.8 95.6L414.6 81.8L441.3 110.2ZM454.1 99.0L429.3 68.9L444.8 57.0L467.6 88.7ZM481.7 79.2L461.1 46.1L478.1 36.3L496.4 70.7ZM511.7 63.2L495.6 27.7L513.7 20.2L527.4 56.7ZM543.5 51.2L532.2 13.9L551.1 8.8L560.0 46.8ZM576.6 43.5L570.3 5.0L589.7 2.4L593.5 41.3ZM610.5 40.1L609.2 1.2L628.8 1.2L627.5 40.1ZM644.5 41.3L648.3 2.4L667.7 5.0L661.4 43.5ZM678.0 46.8L686.9 8.8L705.8 13.9L694.5 51.2ZM710.6 56.7L724.3 20.2L742.4 27.7L726.3 63.2ZM741.6 70.7L759.9 36.3L776.9 46.1L756.3 79.2ZM770.4 88.7L793.2 57.0L808.7 68.9L783.9 99.0ZM796.7 110.2L823.4 81.8L837.2 95.6L808.8 122.3ZM820.0 135.1L850.1 110.3L862.0 125.8L830.3 148.6ZM839.8 162.7L872.9 142.1L882.7 159.1L848.3 177.4ZM855.8 192.7L891.3 176.6L898.8 194.7L862.3 208.4ZM867.8 224.5L905.1 213.2L910.2 232.1L872.2 241.0ZM875.5 257.6L914.0 251.3L916.6 270.7L877.7 274.5Z" fill="var(--paper)"/></g><g class="gear" style="--spin:-120deg; --dur:60s; transform-origin:229.0px 300.0px"><path d="M358.7 291.5L397.6 288.9L397.6 311.1L358.7 308.5ZM356.5 325.4L394.8 333.0L389.0 354.3L352.1 341.8ZM345.6 357.5L380.6 374.7L369.5 393.9L337.1 372.2ZM326.7 385.7L356.1 411.4L340.4 427.1L314.7 397.7ZM301.2 408.1L322.9 440.5L303.7 451.6L286.5 416.6ZM270.8 423.1L283.3 460.0L262.0 465.8L254.4 427.5ZM237.5 429.7L240.1 468.6L217.9 468.6L220.5 429.7ZM203.6 427.5L196.0 465.8L174.7 460.0L187.2 423.1ZM171.5 416.6L154.3 451.6L135.1 440.5L156.8 408.1ZM143.3 397.7L117.6 427.1L101.9 411.4L131.3 385.7ZM120.9 372.2L88.5 393.9L77.4 374.7L112.4 357.5ZM105.9 341.8L69.0 354.3L63.2 333.0L101.5 325.4ZM99.3 308.5L60.4 311.1L60.4 288.9L99.3 291.5ZM101.5 274.6L63.2 267.0L69.0 245.7L105.9 258.2ZM112.4 242.5L77.4 225.3L88.5 206.1L120.9 227.8ZM131.3 214.3L101.9 188.6L117.6 172.9L143.3 202.3ZM156.8 191.9L135.1 159.5L154.3 148.4L171.5 183.4ZM187.2 176.9L174.7 140.0L196.0 134.2L203.6 172.5ZM220.5 170.3L217.9 131.4L240.1 131.4L237.5 170.3ZM254.4 172.5L262.0 134.2L283.3 140.0L270.8 176.9ZM286.5 183.4L303.7 148.4L322.9 159.5L301.2 191.9ZM314.7 202.3L340.4 172.9L356.1 188.6L326.7 214.3ZM337.1 227.8L369.5 206.1L380.6 225.3L345.6 242.5ZM352.1 258.2L389.0 245.7L394.8 267.0L356.5 274.6Z" fill="var(--dark)"/></g></svg>
+    <svg viewBox="0 0 600 600" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g class="gear" style="--spin:60deg; --dur:120s; transform-origin:619.0px 300.0px"><path d="M878.9 291.5L917.8 290.2L917.8 309.8L878.9 308.5ZM877.7 325.5L916.6 329.3L914.0 348.7L875.5 342.4ZM872.2 359.0L910.2 367.9L905.1 386.8L867.8 375.5ZM862.3 391.6L898.8 405.3L891.3 423.4L855.8 407.3ZM848.3 422.6L882.7 440.9L872.9 457.9L839.8 437.3ZM830.3 451.4L862.0 474.2L850.1 489.7L820.0 464.9ZM808.8 477.7L837.2 504.4L823.4 518.2L796.7 489.8ZM783.9 501.0L808.7 531.1L793.2 543.0L770.4 511.3ZM756.3 520.8L776.9 553.9L759.9 563.7L741.6 529.3ZM726.3 536.8L742.4 572.3L724.3 579.8L710.6 543.3ZM694.5 548.8L705.8 586.1L686.9 591.2L678.0 553.2ZM661.4 556.5L667.7 595.0L648.3 597.6L644.5 558.7ZM627.5 559.9L628.8 598.8L609.2 598.8L610.5 559.9ZM593.5 558.7L589.7 597.6L570.3 595.0L576.6 556.5ZM560.0 553.2L551.1 591.2L532.2 586.1L543.5 548.8ZM527.4 543.3L513.7 579.8L495.6 572.3L511.7 536.8ZM496.4 529.3L478.1 563.7L461.1 553.9L481.7 520.8ZM467.6 511.3L444.8 543.0L429.3 531.1L454.1 501.0ZM441.3 489.8L414.6 518.2L400.8 504.4L429.2 477.7ZM418.0 464.9L387.9 489.7L376.0 474.2L407.7 451.4ZM398.2 437.3L365.1 457.9L355.3 440.9L389.7 422.6ZM382.2 407.3L346.7 423.4L339.2 405.3L375.7 391.6ZM370.2 375.5L332.9 386.8L327.8 367.9L365.8 359.0ZM362.5 342.4L324.0 348.7L321.4 329.3L360.3 325.5ZM359.1 308.5L320.2 309.8L320.2 290.2L359.1 291.5ZM360.3 274.5L321.4 270.7L324.0 251.3L362.5 257.6ZM365.8 241.0L327.8 232.1L332.9 213.2L370.2 224.5ZM375.7 208.4L339.2 194.7L346.7 176.6L382.2 192.7ZM389.7 177.4L355.3 159.1L365.1 142.1L398.2 162.7ZM407.7 148.6L376.0 125.8L387.9 110.3L418.0 135.1ZM429.2 122.3L400.8 95.6L414.6 81.8L441.3 110.2ZM454.1 99.0L429.3 68.9L444.8 57.0L467.6 88.7ZM481.7 79.2L461.1 46.1L478.1 36.3L496.4 70.7ZM511.7 63.2L495.6 27.7L513.7 20.2L527.4 56.7ZM543.5 51.2L532.2 13.9L551.1 8.8L560.0 46.8ZM576.6 43.5L570.3 5.0L589.7 2.4L593.5 41.3ZM610.5 40.1L609.2 1.2L628.8 1.2L627.5 40.1ZM644.5 41.3L648.3 2.4L667.7 5.0L661.4 43.5ZM678.0 46.8L686.9 8.8L705.8 13.9L694.5 51.2ZM710.6 56.7L724.3 20.2L742.4 27.7L726.3 63.2ZM741.6 70.7L759.9 36.3L776.9 46.1L756.3 79.2ZM770.4 88.7L793.2 57.0L808.7 68.9L783.9 99.0ZM796.7 110.2L823.4 81.8L837.2 95.6L808.8 122.3ZM820.0 135.1L850.1 110.3L862.0 125.8L830.3 148.6ZM839.8 162.7L872.9 142.1L882.7 159.1L848.3 177.4ZM855.8 192.7L891.3 176.6L898.8 194.7L862.3 208.4ZM867.8 224.5L905.1 213.2L910.2 232.1L872.2 241.0ZM875.5 257.6L914.0 251.3L916.6 270.7L877.7 274.5Z" fill="var(--light)"/></g><g class="gear" style="--spin:-120deg; --dur:60s; transform-origin:229.0px 300.0px"><path d="M358.7 291.5L397.6 288.9L397.6 311.1L358.7 308.5ZM356.5 325.4L394.8 333.0L389.0 354.3L352.1 341.8ZM345.6 357.5L380.6 374.7L369.5 393.9L337.1 372.2ZM326.7 385.7L356.1 411.4L340.4 427.1L314.7 397.7ZM301.2 408.1L322.9 440.5L303.7 451.6L286.5 416.6ZM270.8 423.1L283.3 460.0L262.0 465.8L254.4 427.5ZM237.5 429.7L240.1 468.6L217.9 468.6L220.5 429.7ZM203.6 427.5L196.0 465.8L174.7 460.0L187.2 423.1ZM171.5 416.6L154.3 451.6L135.1 440.5L156.8 408.1ZM143.3 397.7L117.6 427.1L101.9 411.4L131.3 385.7ZM120.9 372.2L88.5 393.9L77.4 374.7L112.4 357.5ZM105.9 341.8L69.0 354.3L63.2 333.0L101.5 325.4ZM99.3 308.5L60.4 311.1L60.4 288.9L99.3 291.5ZM101.5 274.6L63.2 267.0L69.0 245.7L105.9 258.2ZM112.4 242.5L77.4 225.3L88.5 206.1L120.9 227.8ZM131.3 214.3L101.9 188.6L117.6 172.9L143.3 202.3ZM156.8 191.9L135.1 159.5L154.3 148.4L171.5 183.4ZM187.2 176.9L174.7 140.0L196.0 134.2L203.6 172.5ZM220.5 170.3L217.9 131.4L240.1 131.4L237.5 170.3ZM254.4 172.5L262.0 134.2L283.3 140.0L270.8 176.9ZM286.5 183.4L303.7 148.4L322.9 159.5L301.2 191.9ZM314.7 202.3L340.4 172.9L356.1 188.6L326.7 214.3ZM337.1 227.8L369.5 206.1L380.6 225.3L345.6 242.5ZM352.1 258.2L389.0 245.7L394.8 267.0L356.5 274.6Z" fill="var(--dark)"/></g></svg>
     <div class="wrap">
       <div class="hero-copy">
         <a class="back label" href="https://gears.run">← All gears</a>
