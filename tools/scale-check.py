@@ -5,7 +5,7 @@ css = re.sub(r'/\*.*?\*/', '', re.search(r'<style>(.*?)</style>', src, re.S).gro
 TYPE   = {'0.75rem','1rem','1.333rem','1.777rem','3.158rem'}      # perfect fourth
 SPACE  = {'0.25rem','0.5rem','1rem','1.5rem','2rem','3rem','4rem','6rem'}
 ROOT   = {'1rem','0.25vw','1.25rem'}                              # fluid root parameters
-LAYOUT = {'66ch','64rem','30rem'}                                 # measure, container, hero
+LAYOUT = {'66ch','64rem','76rem','30rem','50%'}                  # measure, container, breakpoint, hero, art box
 ATOM   = {'1px','100%','100vw','0','0.16em','-0.02em','360deg'}           # hairline, tracking, full turn
 ALLOWED = TYPE | SPACE | ROOT | LAYOUT | ATOM
 
